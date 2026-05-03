@@ -11,4 +11,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::inertia('productos', 'Producto/vistaProductos')->name('producto');
+});
+
 require __DIR__.'/settings.php';
