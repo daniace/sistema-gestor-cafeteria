@@ -1,5 +1,11 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import {
+    ChartLineIcon,
+    CoffeeBeanIcon,
+    SealPercentIcon,
+    UserIcon,
+} from '@phosphor-icons/react';
+import { BookOpen, FolderGit2 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -15,12 +21,6 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
-import {
-    ChartLineIcon,
-    CoffeeBeanIcon,
-    SealPercentIcon,
-    UserIcon,
-} from '@phosphor-icons/react';
 
 const mainNavItems: NavItem[] = [
     // {
