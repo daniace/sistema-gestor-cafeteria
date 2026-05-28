@@ -15,7 +15,7 @@ class ProductoController extends Controller
     public function index()
     {
         $productos = Producto::all();
-        return Inertia::render('Producto/vistaProductos', [
+        return Inertia::render('Producto/vistaProducto', [
             'productos' => $productos
         ]);
     }
@@ -35,6 +35,7 @@ class ProductoController extends Controller
     {
         Producto::create([
             ...$request->validated(),
+            'fechaUltimaMod' => null,
             'productoEstaVigente' => true,
             'motivoBaja' => null,]);
             return redirect()->back()->with('success', 'Producto creado exitosamente.');
