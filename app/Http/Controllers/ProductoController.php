@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
 use App\Models\Producto;
+use Inertia\Inertia;
 
 class ProductoController extends Controller
 {
@@ -14,8 +15,7 @@ class ProductoController extends Controller
     public function index()
     {
         $productos = Producto::all();
-
-        return inertia('producto/vista-producto', [
+        return Inertia::render('Producto/vistaProductos', [
             'productos' => $productos,
         ]);
     }
@@ -33,7 +33,11 @@ class ProductoController extends Controller
      */
     public function store(StoreProductoRequest $request)
     {
-        //
+        Producto::create([
+            ...$request->validated(),
+            'productoEstaVigente' => true,
+            'motivoBaja' => null,]);
+            return redirect()->back()->with('success', 'Producto creado exitosamente.');
     }
 
     /**

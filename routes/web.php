@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -13,7 +14,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('productos', 'producto/vista-producto')->name('producto');
+    Route::get('productos', [ProductoController::class, 'index'])->name('producto');
+    Route::post('productos', [ProductoController::class, 'store'])->name('producto.store');
     Route::get('usuarios', [UserController::class, 'index'])->name('usuario');
     Route::post('usuarios', [UserController::class, 'store'])->name('usuario.store');
     Route::delete('usuarios/{user}', [UserController::class, 'destroy'])->name('usuario.destroy');
