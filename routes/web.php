@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductoController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -12,7 +13,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('productos', 'Producto/vistaProductos')->name('producto');
+    Route::get('productos', [ProductoController::class, 'index'])->name('producto');
+    Route::post('productos', [ProductoController::class, 'store'])->name('producto.store');
 });
 
 require __DIR__.'/settings.php';

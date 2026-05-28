@@ -19,7 +19,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import { dashboard, producto } from '@/routes';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -34,8 +34,8 @@ const mainNavItems: NavItem[] = [
         icon: SealPercentIcon,
     },
     {
-        title: 'Stock',
-        href: '',
+        title: 'Producto',
+        href: producto(),
         icon: CoffeeBeanIcon,
     },
     {
