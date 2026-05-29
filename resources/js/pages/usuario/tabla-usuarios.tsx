@@ -1,7 +1,9 @@
 import { MoreHorizontalIcon } from 'lucide-react';
 import { User } from '@/types/auth';
-
 import { Button } from '@/components/ui/button';
+import { destroy } from '@/actions/App/Http/Controllers/UserController';
+import { router } from '@inertiajs/react';
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -41,8 +43,9 @@ export function TableActions({ usuarios }: { usuarios: User[] }) {
                         <TableCell>{usuario.apellido}</TableCell>
                         <TableCell>{usuario.rol}</TableCell>
                         <TableCell>
-                            {(usuario.estado_cuenta_usuario && 'Activo') ??
-                                'Inactivo'}
+                            {usuario.estado_cuenta_usuario
+                                ? 'Activo'
+                                : 'Inactivo'}
                         </TableCell>
                         <TableCell className="text-right">
                             <DropdownMenu>
@@ -64,7 +67,14 @@ export function TableActions({ usuarios }: { usuarios: User[] }) {
                                         Duplicar
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem variant="destructive">
+                                    <DropdownMenuItem
+                                        variant="destructive"
+                                        onSelect={() =>
+                                            router.delete(
+                                                destroy(usuario.id).url,
+                                            )
+                                        }
+                                    >
                                         Eliminar
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>

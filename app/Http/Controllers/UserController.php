@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Inertia\Inertia;
+use function Termwind\render;
 
 class UserController extends Controller
 {
@@ -52,7 +53,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        return Inertia::render('usuario/dialog-form-usuario', [
+            'usuario' => $user,
+        ]);
     }
 
     /**
@@ -60,7 +63,8 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        $user->update($request->validated());
+        return redirect()->back()->with('success', 'Usuario actualizado exitosamente.');
     }
 
     /**
@@ -68,6 +72,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->update([
+            'estado_cuenta_usuario' => false,
+            'causa_eliminacion' => 'El usuario ha sido eliminado.',
+        ]);
+        return redirect()->back()->with('success', 'Usuario eliminado exitosamente.');
     }
 }
