@@ -63,6 +63,8 @@ class ProductoController extends Controller
     public function update(UpdateProductoRequest $request, Producto $producto)
     {
         //
+        $producto->update($request->validated());
+        return redirect()->back()->with('success', 'Producto actualizado exitosamente.');
     }
 
     /**

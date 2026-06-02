@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('productos', function (Blueprint $table) {
             $table->id();
+            $table->string('descripcion');
+            $table->decimal('precio', 8, 2);
+            $table->integer('categoria');
+            $table->integer('stock_actual');
+            $table->integer('stock_minimo');
+            $table->boolean('producto_esta_vigente')->default(true);
+            $table->string('motivo_baja')->nullable();
             $table->timestamps();
         });
     }

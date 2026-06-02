@@ -1,19 +1,19 @@
 import { Head, Form } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
-import { dashboard, producto } from '@/routes';
-import { TableActions } from './tabla-productos';
-import { Card } from '@/components/ui/card';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { store } from '@/routes/producto';
 import {
     NativeSelect,
     NativeSelectOption,
 } from '@/components/ui/native-select';
 import { Spinner } from '@/components/ui/spinner';
-import InputError from '@/components/input-error';
-
+import AppLayout from '@/layouts/app-layout';
+import { dashboard, producto } from '@/routes';
+import { store } from '@/routes/producto';
+import type { BreadcrumbItem } from '@/types';
+import type { Producto } from '@/types/models';
+import { TableActions } from './tabla-productos';
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Productardo',
@@ -25,7 +25,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function vistaProducto({ productos }) {
+export default function vistaProducto({
+    productos,
+}: {
+    productos: Producto[];
+}) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Productos" />
@@ -33,7 +37,7 @@ export default function vistaProducto({ productos }) {
                 <h1 className="text-2xl font-bold">Gestion Usuarios</h1>
                 <p>Administra el acceso y roles del personal del café</p>
                 <div className="flex gap-2">
-                    <div className="w-10/12">
+                    <div className="w-1/2">
                         <TableActions productos={productos} />
                     </div>
 
@@ -42,8 +46,11 @@ export default function vistaProducto({ productos }) {
                             <Form
                                 {...store.form()}
                                 resetOnSuccess={[
-                                    'password',
-                                    'password_confirmation',
+                                    'descripcion',
+                                    'categoria',
+                                    'stock_actual',
+                                    'stock_minimo',
+                                    'precio',
                                 ]}
                                 disableWhileProcessing
                                 className="flex flex-col gap-6"
@@ -75,12 +82,11 @@ export default function vistaProducto({ productos }) {
                                         >
                                             <NativeSelectOption
                                                 disabled
-                                                selected
-                                                value="ninguna"
+                                                value="0"
                                             >
                                                 Ninguna
                                             </NativeSelectOption>
-                                            <NativeSelectOption value="helados">
+                                            <NativeSelectOption value="1">
                                                 Helados
                                             </NativeSelectOption>
                                         </NativeSelect>
@@ -91,8 +97,8 @@ export default function vistaProducto({ productos }) {
                                                 required
                                                 autoFocus
                                                 autoComplete="0"
-                                                name="stockactual"
-                                                placeholder="StockActual"
+                                                name="stock_actual"
+                                                placeholder="Stock Actual"
                                             />
                                             <InputError
                                                 message={errors.stock_actual}
@@ -104,8 +110,8 @@ export default function vistaProducto({ productos }) {
                                                 required
                                                 autoFocus
                                                 autoComplete="0"
-                                                name="stockminimo"
-                                                placeholder="StockMinimo"
+                                                name="stock_minimo"
+                                                placeholder="Stock Minimo"
                                             />
                                             <InputError
                                                 message={errors.stock_minimo}
