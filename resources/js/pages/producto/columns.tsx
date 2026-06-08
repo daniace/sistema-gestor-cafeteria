@@ -1,11 +1,11 @@
 'use client';
 
-//import { router } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 //import { ArrowUpDown } from 'lucide-react';
 
 //import destroy from '@/actions/App/Http/Controllers/ProductoController';
-//import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import type { Producto } from '@/types/models';
 
 // This type is used to define the shape of our data.
@@ -23,6 +23,11 @@ export const columns: ColumnDef<Producto>[] = [
     {
         accessorKey: 'updated_at',
         header: 'Fecha',
+        cell: ({ getValue }) => {
+            const d = new Date(getValue());
+
+            return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+        },
     },
     {
         accessorKey: 'stock_actual',
@@ -57,26 +62,26 @@ export const columns: ColumnDef<Producto>[] = [
     {
         accessorKey: 'motivo_baja',
         header: 'Motivo-Baja',
-    } /*
+    },
     {
         id: 'editar',
         header: 'Acciones',
         cell: ({ row }) => {
-            const user = row.original;
+            const producto = row.original;
 
             return (
                 <Button
                     variant="outline"
                     size="icon"
                     onClick={() => {
-                        router.get(`/usuarios/${user.id}/edit`);
+                        router.get(`/productos/${producto.id}/edit`);
                     }}
                 >
                     Editar
                 </Button>
             );
         },
-    },*/,
+    },
     /*{
         id: 'eliminar',
         header: '',

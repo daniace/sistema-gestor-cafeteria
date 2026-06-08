@@ -54,7 +54,9 @@ class ProductoController extends Controller
      */
     public function edit(Producto $producto)
     {
-        //
+        return Inertia::render('Producto/dialog-form-producto', [
+            'producto' => $producto
+        ]);
     }
 
     /**
@@ -64,7 +66,8 @@ class ProductoController extends Controller
     {
         //
         $producto->update($request->validated());
-        return redirect()->back()->with('success', 'Producto actualizado exitosamente.');
+        return redirect()->route('producto')->with('success', 'Producto actualizado exitosamente.');
+
     }
 
     /**
