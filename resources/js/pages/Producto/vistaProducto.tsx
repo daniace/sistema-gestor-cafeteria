@@ -44,7 +44,7 @@ export default function vistaProducto({
                 <p>Administra el acceso y roles del personal del café</p>
 
                 <div className="mt-4">
-                    <Card className="w-full bg-card p-4 text-card-foreground">
+                    <Card className="w-2/4 bg-card p-4 text-card-foreground">
                         <Form
                             {...store.form()}
                             resetOnSuccess={[
