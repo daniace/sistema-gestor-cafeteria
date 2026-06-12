@@ -1,17 +1,9 @@
-import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
-import type { BreadcrumbItem } from '@/types';
-import { User } from '@/types/auth';
-import { useState } from 'react';
-import { usuario } from '@/routes';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Form } from '@inertiajs/react';
-import { store } from '@/routes/usuario';
-import {
-    NativeSelect,
-    NativeSelectOption,
-} from '@/components/ui/native-select';
+import { useState } from 'react';
+import InputError from '@/components/input-error';
+import PasswordInput from '@/components/password-input';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogClose,
@@ -22,9 +14,17 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Field, FieldGroup } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import {
+    NativeSelect,
+    NativeSelectOption,
+} from '@/components/ui/native-select';
 import { Spinner } from '@/components/ui/spinner';
-import InputError from '@/components/input-error';
-import PasswordInput from '@/components/password-input';
+import AppLayout from '@/layouts/app-layout';
+import { usuario } from '@/routes';
+import { store } from '@/routes/usuario';
+import type { BreadcrumbItem } from '@/types';
+import type { User } from '@/types/auth';
 import { columns } from './columns';
 import { DataTable } from './data-tabla-usuarios';
 
@@ -35,8 +35,9 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function vistaUsuario({ usuarios }: { usuarios: User[] }) {
+export default function VistaUsuario({ usuarios }: { usuarios: User[] }) {
     const [dialogOpen, setDialogOpen] = useState(false);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Usuarios" />

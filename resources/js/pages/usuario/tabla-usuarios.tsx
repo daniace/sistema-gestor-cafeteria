@@ -1,8 +1,7 @@
-import { MoreHorizontalIcon } from 'lucide-react';
-import { User } from '@/types/auth';
-import { Button } from '@/components/ui/button';
-import { destroy } from '@/actions/App/Http/Controllers/UserController';
 import { router } from '@inertiajs/react';
+import { MoreHorizontalIcon } from 'lucide-react';
+import { destroy } from '@/actions/App/Http/Controllers/UserController';
+import { Button } from '@/components/ui/button';
 
 import {
     DropdownMenu,
@@ -19,6 +18,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import type { User } from '@/types/auth';
 
 export function TableActions({ usuarios }: { usuarios: User[] }) {
     return (

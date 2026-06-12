@@ -1,7 +1,7 @@
-import {
-    NativeSelect,
-    NativeSelectOption,
-} from '@/components/ui/native-select';
+import { Form } from '@inertiajs/react';
+import { useState } from 'react';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogClose,
@@ -11,15 +11,15 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import InputError from '@/components/input-error';
 import { Field, FieldGroup } from '@/components/ui/field';
-import { Form } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+    NativeSelect,
+    NativeSelectOption,
+} from '@/components/ui/native-select';
 import { Spinner } from '@/components/ui/spinner';
-import { useState } from 'react';
 import { update } from '@/routes/usuario';
-import { User } from '@/types/auth';
+import type { User } from '@/types/auth';
 
 export default function DialogFormUsuario({ usuario }: { usuario: User }) {
     const [dialogOpen, setDialogOpen] = useState(true);
@@ -30,6 +30,7 @@ export default function DialogFormUsuario({ usuario }: { usuario: User }) {
         email: usuario.email,
         rol: usuario.rol,
     });
+
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>

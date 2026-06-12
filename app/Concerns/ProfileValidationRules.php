@@ -66,6 +66,7 @@ trait ProfileValidationRules
     {
         return ['string', 'in:admin,user'];
     }
+
     /**
      * Get the validation rules used to validate user emails.
      *

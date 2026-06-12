@@ -21,6 +21,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('usuarios/{user}', [UserController::class, 'update'])->name('usuario.update');
 });
 
-
-
 require __DIR__.'/settings.php';
