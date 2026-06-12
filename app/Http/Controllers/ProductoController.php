@@ -15,6 +15,7 @@ class ProductoController extends Controller
     public function index()
     {
         $productos = Producto::all();
+
         return Inertia::render('producto/vistaProducto', [
             'productos' => $productos,
         ]);
@@ -38,6 +39,7 @@ class ProductoController extends Controller
             'producto_esta_vigente' => true,
             'motivo_baja' => null,
         ]);
+
         return redirect()->back()->with('success', 'Producto creado exitosamente.');
     }
 
@@ -54,8 +56,8 @@ class ProductoController extends Controller
      */
     public function edit(Producto $producto)
     {
-        return Inertia::render('Producto/dialog-form-producto', [
-            'producto' => $producto
+        return Inertia::render('producto/dialog-form-producto', [
+            'producto' => $producto,
         ]);
     }
 
@@ -66,6 +68,7 @@ class ProductoController extends Controller
     {
         //
         $producto->update($request->validated());
+
         return redirect()->route('producto')->with('success', 'Producto actualizado exitosamente.');
 
     }
@@ -73,7 +76,6 @@ class ProductoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-
     public function destroy(Producto $producto)
     {
         //
