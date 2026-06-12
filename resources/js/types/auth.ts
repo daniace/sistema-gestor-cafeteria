@@ -1,7 +1,12 @@
 export type User = {
     id: number;
-    name: string;
+    nombre: string;
+    apellido: string;
     email: string;
+    dni: string;
+    estado_cuenta_usuario: boolean;
+    causa_eliminacion: string | null;
+    rol: string;
     avatar?: string;
     email_verified_at: string | null;
     two_factor_enabled?: boolean;

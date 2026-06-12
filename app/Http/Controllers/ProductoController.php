@@ -14,7 +14,7 @@ class ProductoController extends Controller
     public function index()
     {
         $productos = Producto::all();
-        return inertia('Producto/vistaProductos', [
+        return inertia('producto/vista-producto', [
             'productos' => $productos
         ]);
     }
