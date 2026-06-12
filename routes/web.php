@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\UserController;
+use App\Models\Producto;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 Route::inertia('/', 'welcome', [
@@ -11,6 +13,11 @@ Route::inertia('/', 'welcome', [
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::get('inicio', function () {
+        return Inertia::render('inicio', [
+            'productos' => Producto::all(),
+        ]);
+    })->name('inicio');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
