@@ -151,7 +151,7 @@ export default function DialogFormUsuario({ usuario }: { usuario: User }) {
                                         <NativeSelectOption
                                             disabled
                                             selected
-                                            value={usuario.rol}
+                                            value={formData.rol}
                                         >
                                             Seleccionar Rol
                                         </NativeSelectOption>

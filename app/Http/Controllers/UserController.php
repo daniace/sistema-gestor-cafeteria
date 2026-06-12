@@ -64,7 +64,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         $user->update($request->validated());
-        return redirect()->back()->with('success', 'Usuario actualizado exitosamente.');
+        return redirect()->route('usuario')->with('success', 'Usuario actualizado exitosamente.');
     }
 
     /**
