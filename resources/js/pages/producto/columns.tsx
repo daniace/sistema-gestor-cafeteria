@@ -7,7 +7,6 @@ import type { ColumnDef } from '@tanstack/react-table';
 //import destroy from '@/actions/App/Http/Controllers/ProductoController';
 import { Button } from '@/components/ui/button';
 import type { Producto } from '@/types/models';
-
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
@@ -82,25 +81,26 @@ export const columns: ColumnDef<Producto>[] = [
             );
         },
     },
-    /*{
+    {
         id: 'eliminar',
         header: '',
 
         cell: ({ row }) => {
-            //const producto = row.original;
+            const producto = row.original;
 
-            return (
-                <Button
-                    variant="destructive"
-                    size="icon"
-                    /*
-                    onClick={() => {
-                        router.delete(destroy(producto.id).url);
-                    }}
-                >
-                    Eliminar
-                </Button>
-            );
+            if (producto.puede_eliminar) {
+                return (
+                    <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => {
+                            router.delete(`/productos/${producto.id}`);
+                        }}
+                    >
+                        Eliminar
+                    </Button>
+                );
+            }
         },
-    },*/
+    },
 ];

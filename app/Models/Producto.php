@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Database\Factories\ProductoFactory;
+use Illuminate\Database\Eloquent\Attributes\Appends;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +13,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Producto extends Model
 {
+    protected $appends = ['puede_eliminar'];
+
     /** @use HasFactory<ProductoFactory> */
     use HasFactory;
+
+    protected function getPuedeEliminarAttribute(): bool
+    {
+        return $this->producto_esta_vigente;
+    }
 }

@@ -78,6 +78,11 @@ class ProductoController extends Controller
      */
     public function destroy(Producto $producto)
     {
-        //
+        $producto->update([
+            'producto_esta_vigente' => false,
+            'motivo_baja' => 'El producto ha sido eliminado.',
+        ]);
+
+        return redirect()->route('producto')->with('success', 'Producto eliminado exitosamente.');
     }
 }
