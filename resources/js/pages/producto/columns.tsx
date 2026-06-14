@@ -1,14 +1,14 @@
 'use client';
 
-import { router } from '@inertiajs/react';
+//import { router } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 //import { ArrowUpDown } from 'lucide-react';
 
 //import destroy from '@/actions/App/Http/Controllers/ProductoController';
-import { Button } from '@/components/ui/button';
+//import { Button } from '@/components/ui/button';
 import type { Producto } from '@/types/models';
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+import DialogFormBajaProducto from './dialog-form-baja-producto';
+import DialogFormProducto from './dialog-form-producto';
 
 export const columns: ColumnDef<Producto>[] = [
     {
@@ -23,7 +23,7 @@ export const columns: ColumnDef<Producto>[] = [
         accessorKey: 'updated_at',
         header: 'Fecha',
         cell: ({ getValue }) => {
-            const d = new Date(getValue());
+            const d = new Date(getValue() as string);
 
             return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
         },
@@ -68,17 +68,7 @@ export const columns: ColumnDef<Producto>[] = [
         cell: ({ row }) => {
             const producto = row.original;
 
-            return (
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                        router.get(`/productos/${producto.id}/edit`);
-                    }}
-                >
-                    Editar
-                </Button>
-            );
+            return <DialogFormProducto producto={producto} />;
         },
     },
     {
@@ -89,17 +79,7 @@ export const columns: ColumnDef<Producto>[] = [
             const producto = row.original;
 
             if (producto.puede_eliminar) {
-                return (
-                    <Button
-                        variant="destructive"
-                        size="icon"
-                        onClick={() => {
-                            router.delete(`/productos/${producto.id}`);
-                        }}
-                    >
-                        Eliminar
-                    </Button>
-                );
+                return <DialogFormBajaProducto producto={producto} />;
             }
         },
     },

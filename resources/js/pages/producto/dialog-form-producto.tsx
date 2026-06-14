@@ -11,6 +11,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import { Field, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
     NativeSelect,
@@ -19,14 +20,13 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { update } from '@/routes/producto';
 import type { Producto } from '@/types/models';
-import { Field, FieldGroup } from '@/components/ui/field';
 
 export default function DialogFormProducto({
     producto,
 }: {
     producto: Producto;
 }) {
-    const [dialogOpen, setDialogOpen] = useState(true);
+    const [dialogOpen, setDialogOpen] = useState(false);
     const [formData, setFormData] = useState({
         descripcion: producto.descripcion,
         categoria: producto.categoria,
@@ -38,7 +38,7 @@ export default function DialogFormProducto({
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline">Editar Usuario</Button>
+                <Button variant="outline">Editar</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-sm">
                 <Form
