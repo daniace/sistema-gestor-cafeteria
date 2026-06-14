@@ -1,15 +1,13 @@
 'use client';
 
-import { router } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
+//import { UserController } from '@/app/Http/Controllers/UserController';
 import { ArrowUpDown } from 'lucide-react';
 
-import { destroy } from '@/actions/App/Http/Controllers/UserController';
 import { Button } from '@/components/ui/button';
 import type { User } from '@/types/auth';
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+import DialogFormBajaUsuario from './dialog-form-baja-usuario';
+import DialogFormUsuario from './dialog-form-usuario';
 
 export const columns: ColumnDef<User>[] = [
     {
@@ -55,17 +53,7 @@ export const columns: ColumnDef<User>[] = [
         cell: ({ row }) => {
             const user = row.original;
 
-            return (
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                        router.get(`/usuarios/${user.id}/edit`);
-                    }}
-                >
-                    Editar
-                </Button>
-            );
+            return <DialogFormUsuario usuario={user} />;
         },
     },
     {
@@ -74,17 +62,9 @@ export const columns: ColumnDef<User>[] = [
         cell: ({ row }) => {
             const user = row.original;
 
-            return (
-                <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => {
-                        router.delete(destroy(user.id).url);
-                    }}
-                >
-                    Eliminar
-                </Button>
-            );
+            if (user.puede_eliminar) {
+                return <DialogFormBajaUsuario usuario={user} />;
+            }
         },
     },
 ];

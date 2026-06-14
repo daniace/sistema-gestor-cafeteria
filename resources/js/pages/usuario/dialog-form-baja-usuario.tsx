@@ -14,17 +14,13 @@ import {
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
-import { destroy } from '@/routes/producto';
-import type { Producto } from '@/types/models';
+import { destroy } from '@/routes/usuario';
+import type { User } from '@/types/auth';
 
-export default function DialogFormBajaProducto({
-    producto,
-}: {
-    producto: Producto;
-}) {
+export default function DialogFormBajaUsuario({ usuario }: { usuario: User }) {
     const [open, setOpen] = useState(false);
     const form = useForm({
-        motivo_baja: '',
+        causa_eliminacion: '',
     });
     const { setData, errors, processing } = form;
 
@@ -36,9 +32,12 @@ export default function DialogFormBajaProducto({
             <DialogContent>
                 <Form
                     {...destroy.form({
-                        producto: producto,
+                        user: usuario,
                     })}
-                    resetOnSuccess={['producto_vigente', 'motivo_baja']}
+                    resetOnSuccess={[
+                        'estado_cuenta_usuario',
+                        'causa_eliminacion',
+                    ]}
                     onSuccess={() => setOpen(false)}
                     disableWhileProcessing
                     className="flex flex-col gap-6"
@@ -50,28 +49,26 @@ export default function DialogFormBajaProducto({
                             </DialogHeader>
                             <FieldGroup>
                                 <Field className="flex gap-2">
-                                    <FieldLabel>
-                                        {producto.descripcion}
-                                    </FieldLabel>
+                                    <FieldLabel>{usuario.nombre}</FieldLabel>
                                 </Field>
                                 <Field>
-                                    <FieldLabel htmlFor="motivo_baja">
+                                    <FieldLabel htmlFor="causa_eliminacion">
                                         Ingrese el motivo de la baja
                                     </FieldLabel>
                                     <Input
-                                        id="motivo_baja"
+                                        id="causa_eliminacion"
                                         type="text"
-                                        name="motivo_baja"
-                                        placeholder="Motivo Baja"
+                                        name="causa_eliminacion"
+                                        placeholder="Causa de la Eliminación"
                                         onChange={(e) =>
                                             setData(
-                                                'motivo_baja',
+                                                'causa_eliminacion',
                                                 e.target.value,
                                             )
                                         }
                                     />
                                     <InputError
-                                        message={errors.motivo_baja}
+                                        message={errors.causa_eliminacion}
                                         className="mt-2"
                                     />
                                 </Field>

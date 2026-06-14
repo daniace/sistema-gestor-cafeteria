@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
+use App\Http\Requests\DestroyProductoRequest;
 use App\Models\Producto;
 use Inertia\Inertia;
 
@@ -32,7 +33,7 @@ class ProductoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductoRequest $request)
+    public function store (StoreProductoRequest $request)
     {
         Producto::create([
             ...$request->validated(),
@@ -46,7 +47,7 @@ class ProductoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Producto $producto)
+    public function show (Producto $producto)
     {
         //
     }
@@ -54,7 +55,7 @@ class ProductoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Producto $producto)
+    public function edit (Producto $producto)
     {
         return Inertia::render('producto/dialog-form-producto', [
             'producto' => $producto,
@@ -64,7 +65,7 @@ class ProductoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductoRequest $request, Producto $producto)
+    public function update (UpdateProductoRequest $request, Producto $producto)
     {
         //
         $producto->update($request->validated());
@@ -76,11 +77,11 @@ class ProductoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Producto $producto)
+    public function destroy (DestroyProductoRequest $request, Producto $producto)
     {
         $producto->update([
-            'producto_esta_vigente' => false,
-            'motivo_baja' => 'El producto ha sido eliminado.',
+            ...$request->validated(),
+            'producto_esta_vigente' => false
         ]);
 
         return redirect()->route('producto')->with('success', 'Producto eliminado exitosamente.');

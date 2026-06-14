@@ -1,11 +1,8 @@
 'use client';
 
-//import { router } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 //import { ArrowUpDown } from 'lucide-react';
 
-//import destroy from '@/actions/App/Http/Controllers/ProductoController';
-//import { Button } from '@/components/ui/button';
 import type { Producto } from '@/types/models';
 import DialogFormBajaProducto from './dialog-form-baja-producto';
 import DialogFormProducto from './dialog-form-producto';

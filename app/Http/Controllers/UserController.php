@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DestroyUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
@@ -71,11 +72,11 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(DestroyUserRequest $request, User $user)
     {
         $user->update([
+            ...$request->validated(),
             'estado_cuenta_usuario' => false,
-            'causa_eliminacion' => 'El usuario ha sido eliminado.',
         ]);
 
         return redirect()->back()->with('success', 'Usuario eliminado exitosamente.');
