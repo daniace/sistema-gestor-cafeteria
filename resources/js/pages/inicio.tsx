@@ -1,10 +1,12 @@
 import { Head } from '@inertiajs/react';
 import { Coffee } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
+import MesaCard from '@/components/mesa/mesa-card';
 import AppLayout from '@/layouts/app-layout';
+import DialogPedidoMesa from '@/pages/inicio/dialog-pedido-mesa';
 import { inicio } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
+import type { Mesa, Producto } from '@/types/models';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -13,20 +15,28 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const mesas = [
-    { id: 1, capacidad: 4, estado: 'ocupada', hace: '25 min', icono: 'restaurant_menu' },
+const mesas: Mesa[] = [
+    { id: 1, capacidad: 4, estado: 'ocupada', hace: '25 min' },
     { id: 2, capacidad: 4, estado: 'libre' },
     { id: 3, capacidad: 2, estado: 'libre' },
-    { id: 4, capacidad: 4, estado: 'ocupada', hace: '10 min', icono: 'local_cafe' },
+    { id: 4, capacidad: 4, estado: 'ocupada', hace: '10 min' },
     { id: 5, capacidad: 4, estado: 'libre' },
     { id: 6, capacidad: 6, estado: 'libre' },
-    { id: 7, capacidad: 2, estado: 'ocupada', hace: '45 min', icono: 'restaurant_menu' },
+    { id: 7, capacidad: 2, estado: 'ocupada', hace: '45 min' },
     { id: 8, capacidad: 2, estado: 'libre' },
-    { id: 9, capacidad: 4, estado: 'ocupada', hace: '5 min', icono: 'local_cafe' },
+    { id: 9, capacidad: 4, estado: 'ocupada', hace: '5 min' },
     { id: 10, capacidad: 4, estado: 'libre' },
 ];
 
-export default function Inicio() {
+export default function Inicio({ productos }: { productos: Producto[] }) {
+    const [mesaSeleccionada, setMesaSeleccionada] = useState<Mesa | null>(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+    function handleMesaClick(mesa: Mesa) {
+        setMesaSeleccionada(mesa);
+        setDialogOpen(true);
+    }
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Inicio" />
@@ -48,80 +58,21 @@ export default function Inicio() {
 
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                     {mesas.map((mesa) => (
-                        <MesaCard key={mesa.id} {...mesa} />
+                        <MesaCard
+                            key={mesa.id}
+                            {...mesa}
+                            onClick={() => handleMesaClick(mesa)}
+                        />
                     ))}
                 </div>
             </div>
+
+            <DialogPedidoMesa
+                mesa={mesaSeleccionada}
+                productos={productos}
+                open={dialogOpen}
+                onOpenChange={setDialogOpen}
+            />
         </AppLayout>
-    );
-}
-
-function MesaCard({
-    id,
-    capacidad,
-    estado,
-    hace,
-    icono,
-}: {
-    id: number;
-    capacidad: number;
-    estado: 'libre' | 'ocupada';
-    hace?: string;
-    icono?: string;
-}) {
-    const ocupada = estado === 'ocupada';
-
-    return (
-        <Card
-            className={
-                ocupada
-                    ? 'border-red-200 shadow-sm dark:border-red-800/40'
-                    : 'border-border shadow-sm dark:border-zinc-700/50'
-            }
-        >
-            <CardHeader
-                className={
-                    ocupada
-                        ? 'flex flex-row items-center justify-between border-b border-red-100 px-4 py-3 dark:border-red-900/30'
-                        : 'flex flex-row items-center justify-between border-b border-border px-4 py-3'
-                }
-            >
-                <CardTitle className="text-sm font-semibold">
-                    Mesa {String(id).padStart(2, '0')}
-                </CardTitle>
-                {ocupada ? (
-                    <Badge
-                        variant="destructive"
-                        className="rounded-full px-2 py-0.5 text-[10px] font-bold"
-                    >
-                        OCUPADA
-                    </Badge>
-                ) : (
-                    <Badge
-                        variant="outline"
-                        className="rounded-full px-2 py-0.5 text-[10px] font-bold text-muted-foreground"
-                    >
-                        LIBRE
-                    </Badge>
-                )}
-            </CardHeader>
-            <CardContent className="flex min-h-[100px] flex-col items-center justify-center gap-2 px-4 py-5">
-                {ocupada ? (
-                    <>
-                        <span className="text-3xl">☕</span>
-                        <span className="text-xs text-muted-foreground">
-                            Hace {hace}
-                        </span>
-                    </>
-                ) : (
-                    <>
-                        <span className="text-3xl">🪑</span>
-                        <span className="text-xs font-medium text-muted-foreground">
-                            Capacidad: {capacidad}
-                        </span>
-                    </>
-                )}
-            </CardContent>
-        </Card>
     );
 }

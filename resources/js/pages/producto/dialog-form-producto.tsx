@@ -11,6 +11,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import { Field, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
     NativeSelect,
@@ -19,7 +20,6 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { update } from '@/routes/producto';
 import type { Producto } from '@/types/models';
-import { Field, FieldGroup } from '@/components/ui/field';
 
 export default function DialogFormProducto({
     producto,

@@ -2,22 +2,22 @@
 
 namespace App\Models;
 
-use Database\Factories\ProductoFactory;
+use Database\Factories\PedidoFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-#[Fillable('descripcion', 'categoria', 'stock_actual', 'stock_minimo', 'precio', 'producto_esta_vigente', 'motivo_baja')]
+#[Fillable('cliente', 'estado', 'total', 'user_id', 'numero_mesa')]
 
-class Producto extends Model
+class Pedido extends Model
 {
-    /** @use HasFactory<ProductoFactory> */
+    /** @use HasFactory<PedidoFactory> */
     use HasFactory;
 
-    public function pedidos(): BelongsToMany
+    public function productos(): BelongsToMany
     {
-        return $this->belongsToMany(Pedido::class)
+        return $this->belongsToMany(Producto::class)
             ->withPivot('cantidad', 'precio_unitario')
             ->withTimestamps();
     }

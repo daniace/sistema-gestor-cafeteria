@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\UserController;
 use App\Models\Producto;
@@ -18,6 +19,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'productos' => Producto::all(),
         ]);
     })->name('inicio');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('pedidos', [PedidoController::class, 'store'])->name('pedido.store');
+    Route::get('pedidos/{pedido}', [PedidoController::class, 'show'])->name('pedido.show');
+    Route::get('pedidos/{pedido}/ticket', [PedidoController::class, 'ticket'])->name('pedido.ticket');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
