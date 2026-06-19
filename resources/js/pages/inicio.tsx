@@ -6,7 +6,7 @@ import AppLayout from '@/layouts/app-layout';
 import DialogPedidoMesa from '@/pages/inicio/dialog-pedido-mesa';
 import { inicio } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
-import type { Mesa, Producto } from '@/types/models';
+import type { Mesa, MetodoPago, Producto } from '@/types/models';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -15,20 +15,15 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const mesas: Mesa[] = [
-    { id: 1, capacidad: 4, estado: 'ocupada', hace: '25 min' },
-    { id: 2, capacidad: 4, estado: 'libre' },
-    { id: 3, capacidad: 2, estado: 'libre' },
-    { id: 4, capacidad: 4, estado: 'ocupada', hace: '10 min' },
-    { id: 5, capacidad: 4, estado: 'libre' },
-    { id: 6, capacidad: 6, estado: 'libre' },
-    { id: 7, capacidad: 2, estado: 'ocupada', hace: '45 min' },
-    { id: 8, capacidad: 2, estado: 'libre' },
-    { id: 9, capacidad: 4, estado: 'ocupada', hace: '5 min' },
-    { id: 10, capacidad: 4, estado: 'libre' },
-];
-
-export default function Inicio({ productos }: { productos: Producto[] }) {
+export default function Inicio({
+    productos,
+    mesas,
+    metodoPagos,
+}: {
+    productos: Producto[];
+    mesas: Mesa[];
+    metodoPagos: MetodoPago[];
+}) {
     const [mesaSeleccionada, setMesaSeleccionada] = useState<Mesa | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -70,6 +65,7 @@ export default function Inicio({ productos }: { productos: Producto[] }) {
             <DialogPedidoMesa
                 mesa={mesaSeleccionada}
                 productos={productos}
+                metodoPagos={metodoPagos}
                 open={dialogOpen}
                 onOpenChange={setDialogOpen}
             />

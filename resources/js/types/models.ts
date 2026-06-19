@@ -12,10 +12,18 @@ export type Producto = {
 
 export type Mesa = {
     id: number;
+    numero: number;
     capacidad: number;
     estado: 'libre' | 'ocupada';
-    hace?: string;
-    icono?: string;
+    created_at: string;
+    updated_at: string;
+};
+
+export type MetodoPago = {
+    id: number;
+    descripcion: string;
+    habilitado: boolean;
+    descuento: number;
 };
 
 export type Pedido = {
@@ -28,4 +36,16 @@ export type Pedido = {
     created_at: string;
     updated_at: string;
     productos?: (Producto & { pivot: { cantidad: number; precio_unitario: number } })[];
+};
+
+export type Venta = {
+    id: number;
+    pedido_id: number;
+    metodo_pago_id: number | null;
+    total_original: number;
+    total_final: number;
+    descuento_aplicado: number;
+    created_at: string;
+    pedido?: Pedido;
+    metodo_pago?: MetodoPago;
 };

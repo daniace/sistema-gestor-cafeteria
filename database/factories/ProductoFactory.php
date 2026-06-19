@@ -18,13 +18,27 @@ class ProductoFactory extends Factory
     public function definition(): array
     {
         return [
-            'descripcion' => $this->faker->sentence,
-            'categoria' => $this->faker->randomNumber,
-            'stock_actual' => $this->faker->randomNumber,
-            'stock_minimo' => $this->faker->randomNumber,
-            'precio' => $this->faker->randomFloat(2),
-            'producto_esta_vigente' => $this->faker->boolean,
-            'motivo_baja' => $this->faker->sentence,
+            'descripcion' => $this->faker->sentence(3),
+            'categoria' => $this->faker->numberBetween(1, 5),
+            'stock_actual' => $this->faker->numberBetween(1, 100),
+            'stock_minimo' => $this->faker->numberBetween(1, 10),
+            'precio' => $this->faker->randomFloat(2, 5, 100),
+            'producto_esta_vigente' => true,
+            'motivo_baja' => null,
         ];
+    }
+
+    public function sinStock(): static
+    {
+        return $this->state(fn () => [
+            'stock_actual' => 0,
+        ]);
+    }
+
+    public function conStock(int $cantidad): static
+    {
+        return $this->state(fn () => [
+            'stock_actual' => $cantidad,
+        ]);
     }
 }

@@ -2,8 +2,17 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Mesa } from '@/types/models';
 
+function diffForHumans(dateStr: string): string {
+    const diffMs = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diffMs / 60000);
+    const hrs = Math.floor(mins / 60);
+    if (mins < 1) return 'un momento';
+    if (mins < 60) return `${mins} min`;
+    return `${hrs}h ${mins % 60}m`;
+}
+
 export default function MesaCard({
-    id, capacidad, estado, hace, icono, onClick,
+    numero, capacidad, estado, updated_at, onClick,
 }: Mesa & { onClick?: () => void }) {
     const ocupada = estado === 'ocupada';
 
@@ -24,7 +33,7 @@ export default function MesaCard({
                 }
             >
                 <CardTitle className="text-sm font-semibold">
-                    Mesa {String(id).padStart(2, '0')}
+                    Mesa {String(numero).padStart(2, '0')}
                 </CardTitle>
                 {ocupada ? (
                     <Badge
@@ -47,7 +56,7 @@ export default function MesaCard({
                     <>
                         <span className="text-3xl">☕</span>
                         <span className="text-xs text-muted-foreground">
-                            Hace {hace}
+                            Hace {diffForHumans(updated_at)}
                         </span>
                     </>
                 ) : (

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Mesa;
 use App\Models\Pedido;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +19,11 @@ class PedidoFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'cliente' => $this->faker->name(),
+            'estado' => 'pendiente',
+            'total' => $this->faker->randomFloat(2, 10, 500),
+            'user_id' => null,
+            'numero_mesa' => fn () => Mesa::factory()->create()->numero,
         ];
     }
 }
