@@ -24,7 +24,7 @@ class UpdateProductoRequest extends FormRequest
     {
         return [
             'descripcion' => ['required', 'string', 'max:255'],
-            'categoria' => ['required', 'integer', 'max:200'],
+            'categoria' => ['required', 'integer', 'max:255'],
             'stock_actual' => ['required', 'integer', 'max:9999'],
             'stock_minimo' => ['required', 'integer', 'max:9999'],
             'precio' => ['required', 'decimal:0,2', 'max:9999.99'],
