@@ -77,7 +77,7 @@ export const columns: ColumnDef<Producto>[] = [
             const producto = row.original;
             const { auth } = usePage().props;
 
-            if (producto.puede_eliminar && auth.role === 'admin') {
+            if (producto.puede_eliminar && auth.rol === 'admin') {
                 return <DialogFormBajaProducto producto={producto} />;
             }
         },
