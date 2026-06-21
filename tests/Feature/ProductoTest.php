@@ -36,6 +36,50 @@ test('DescripcionFormatoInvalido', function () {
 });
 
 
+test('DescripcionFormatoInvalidoCadenaConNumeros', function () {
+    $this->post(route('producto.store'), [
+        'descripcion' => "Helado 0",
+        'categoria' => 1,
+        'stock_actual' => 10,
+        'stock_minimo' => 5,
+        'precio' => 99.9,
+    ])->assertSessionHasErrors('descripcion');
+});
+
+
+//TESTS DE CATEGORIA
+
+test('CategoriaRequerida', function () {
+    $this->post(route('producto.store'), [
+        'descripcion' => 'prueba',
+        'categoria' => '',
+        'stock_actual' => 10,
+        'stock_minimo' => 5,
+        'precio' => 999,
+    ])->assertSessionHasErrors('categoria');
+});
+
+test('CategoriaMayorAMaximoCaracteres', function () {
+    $this->post(route('producto.store'), [
+        'descripcion' => 'prueba',
+        'categoria' => str_repeat('a', 256),
+        'stock_actual' => 10,
+        'stock_minimo' => 5,
+        'precio' => 1000.00,
+    ])->assertSessionHasErrors('categoria');
+});
+
+test('CategoriaFormatoInvalido', function () {
+    $this->post(route('producto.store'), [
+        'descripcion' => 'prueba',
+        'categoria' => 'a',
+        'stock_actual' => 10,
+        'stock_minimo' => 5,
+        'precio' => 99.99,
+    ])->assertSessionHasErrors('categoria');
+});
+
+
 
 //TESTS DE STOCK ACTUAL
 test('StockActualRequerido', function () {
@@ -68,15 +112,16 @@ test('StockActualMayorAlLimite', function () {
     ])->assertSessionHasErrors('stock_actual');
 });
 
-//test('StockActualFormatoCadena', function () {
-//    $this->post(route('producto.store'), [
-//        'descripcion' => 'Test',
-//        'categoria' => 1,
-//        'stock_actual' => '10',
-//        'stock_minimo' => 5,
-//        'precio' => 99.99,
-//    ])->assertSessionHasErrors('stock_actual');
-//});
+test('StockActualFormatoCadena', function () {
+    $this->post(route('producto.store'), [
+        'descripcion' => 'Test',
+        'categoria' => 1,
+        'stock_actual' => '10',
+        'stock_minimo' => 5,
+        'precio' => 99.99,
+    ])->assertSessionHasErrors('stock_actual');
+});
+
 
 
 //TESTS DE STOCK MINIMO
@@ -110,15 +155,15 @@ test('StockMinimoConDecimales', function () {
     ])->assertSessionHasErrors('stock_minimo');
 });
 
-//test('StockMinimoFormatoCadena', function () {
-//    $this->post(route('producto.store'), [
-//        'descripcion' => 'Test',
-//        'categoria' => 1,
-//        'stock_actual' => 10,
-//        'stock_minimo' => '5',
-//        'precio' => 99.99,
-//    ])->assertSessionHasErrors('stock_minimo');
-//});
+test('StockMinimoFormatoCadena', function () {
+    $this->post(route('producto.store'), [
+        'descripcion' => 'Test',
+        'categoria' => 1,
+        'stock_actual' => 10,
+        'stock_minimo' => '5',
+        'precio' => 99.99,
+    ])->assertSessionHasErrors('stock_minimo');
+});
 
 
 

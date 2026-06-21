@@ -1,5 +1,6 @@
 'use client';
 
+import { usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 //import { ArrowUpDown } from 'lucide-react';
 
@@ -74,8 +75,9 @@ export const columns: ColumnDef<Producto>[] = [
 
         cell: ({ row }) => {
             const producto = row.original;
+            const { auth } = usePage().props;
 
-            if (producto.puede_eliminar) {
+            if (producto.puede_eliminar && auth.role === 'admin') {
                 return <DialogFormBajaProducto producto={producto} />;
             }
         },

@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import {
     ChartLineIcon,
     CoffeeBeanIcon,
@@ -23,30 +24,34 @@ import { dashboard, producto, usuario } from '@/routes';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
-    // {
-    //     title: 'Dashboard',
-    //     href: dashboard(),
-    //     icon: LayoutGrid,
-    // },
+    {
+        title: 'Dashboard',
+        href: dashboard(),
+        //icon: LayoutGrid,
+    },
     {
         title: 'Venta',
         href: '',
         icon: SealPercentIcon,
+        roles: ['admin', 'vendedor'],
     },
     {
         title: 'Producto',
         href: producto(),
         icon: CoffeeBeanIcon,
+        roles: ['admin', 'vendedor'],
     },
     {
         title: 'Informe',
         href: '',
         icon: ChartLineIcon,
+        roles: ['admin'],
     },
     {
         title: 'Usuario',
         href: usuario(),
         icon: UserIcon,
+        roles: ['admin'],
     },
 ];
 
@@ -64,6 +69,11 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { auth } = usePage().props;
+    const visibleItems = mainNavItems.filter(
+        (item) => !item.roles || item.roles.includes(auth.rol),
+    );
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -79,7 +89,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={visibleItems} />
             </SidebarContent>
 
             <SidebarFooter>

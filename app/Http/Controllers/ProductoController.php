@@ -17,22 +17,19 @@ class ProductoController extends Controller
     {
         $productos = Producto::all();
 
-        return Inertia::render('producto/vistaProducto', [
+        return Inertia::render('producto/vista-producto', [
             'productos' => $productos,
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    /**Show the form for creating a new resource.*/
+
     public function create()
     {
-        //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    /*Store a newly created resource in storage.*/
+
     public function store (StoreProductoRequest $request)
     {
         Producto::create([

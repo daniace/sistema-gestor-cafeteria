@@ -1,5 +1,4 @@
-import { Head } from '@inertiajs/react';
-import { Form } from '@inertiajs/react';
+import { Head, Form } from '@inertiajs/react';
 import { useState } from 'react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
