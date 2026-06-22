@@ -13,8 +13,11 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 
 #[Fillable(['nombre', 'apellido', 'email', 'password', 'dni', 'estado_cuenta_usuario', 'causa_eliminacion', 'rol'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
+
 class User extends Authenticatable
 {
+
+    protected $appends = ['puede_eliminar'];
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
@@ -30,5 +33,10 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+
+    public function getPuedeEliminarAttribute(): bool
+    {
+        return $this->estado_cuenta_usuario && $this->rol !== 'admin';
     }
 }

@@ -8,6 +8,7 @@ export type Producto = {
     producto_esta_vigente: boolean;
     motivo_baja: string | null;
     updated_at: string;
+    puede_eliminar: boolean;
 };
 
 export type Mesa = {

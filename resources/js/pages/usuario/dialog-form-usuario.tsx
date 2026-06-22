@@ -22,7 +22,7 @@ import { update } from '@/routes/usuario';
 import type { User } from '@/types/auth';
 
 export default function DialogFormUsuario({ usuario }: { usuario: User }) {
-    const [dialogOpen, setDialogOpen] = useState(true);
+    const [dialogOpen, setDialogOpen] = useState(false);
     const [formData, setFormData] = useState({
         nombre: usuario.nombre,
         apellido: usuario.apellido,

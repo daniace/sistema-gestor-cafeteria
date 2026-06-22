@@ -64,7 +64,7 @@ trait ProfileValidationRules
 
     protected function roleRules(): array
     {
-        return ['string', 'in:admin,user'];
+        return ['string', 'in:admin,user,vendedor'];
     }
 
     /**

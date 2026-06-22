@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-Route::inertia('/', 'welcome', [
+Route::inertia('/', 'auth/login', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
 
@@ -36,10 +36,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified','role:admin,vendedor'])->group(function () {
     Route::get('productos', [ProductoController::class, 'index'])->name('producto');
     Route::post('productos', [ProductoController::class, 'store'])->name('producto.store');
     Route::get('productos/{producto}/edit', [ProductoController::class, 'edit'])->name('producto.edit');
     Route::put('productos/{producto}', [ProductoController::class, 'update'])->name('producto.update');
+    Route::delete('productos/{producto}', [ProductoController::class, 'destroy'])->name('producto.destroy');
+
     Route::get('usuarios', [UserController::class, 'index'])->name('usuario');
     Route::post('usuarios', [UserController::class, 'store'])->name('usuario.store');
     Route::delete('usuarios/{user}', [UserController::class, 'destroy'])->name('usuario.destroy');

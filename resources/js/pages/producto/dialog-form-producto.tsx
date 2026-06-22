@@ -26,7 +26,7 @@ export default function DialogFormProducto({
 }: {
     producto: Producto;
 }) {
-    const [dialogOpen, setDialogOpen] = useState(true);
+    const [dialogOpen, setDialogOpen] = useState(false);
     const [formData, setFormData] = useState({
         descripcion: producto.descripcion,
         categoria: producto.categoria,
@@ -38,7 +38,7 @@ export default function DialogFormProducto({
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline">Editar Usuario</Button>
+                <Button variant="outline">Editar</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-sm">
                 <Form

@@ -1,15 +1,12 @@
 'use client';
 
-import { router } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 //import { ArrowUpDown } from 'lucide-react';
 
-//import destroy from '@/actions/App/Http/Controllers/ProductoController';
-import { Button } from '@/components/ui/button';
 import type { Producto } from '@/types/models';
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+import DialogFormBajaProducto from './dialog-form-baja-producto';
+import DialogFormProducto from './dialog-form-producto';
 
 export const columns: ColumnDef<Producto>[] = [
     {
@@ -24,7 +21,7 @@ export const columns: ColumnDef<Producto>[] = [
         accessorKey: 'updated_at',
         header: 'Fecha',
         cell: ({ getValue }) => {
-            const d = new Date(getValue());
+            const d = new Date(getValue() as string);
 
             return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
         },
@@ -69,38 +66,20 @@ export const columns: ColumnDef<Producto>[] = [
         cell: ({ row }) => {
             const producto = row.original;
 
-            return (
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                        router.get(`/productos/${producto.id}/edit`);
-                    }}
-                >
-                    Editar
-                </Button>
-            );
+            return <DialogFormProducto producto={producto} />;
         },
     },
-    /*{
+    {
         id: 'eliminar',
         header: '',
 
         cell: ({ row }) => {
-            //const producto = row.original;
+            const producto = row.original;
+            const { auth } = usePage().props;
 
-            return (
-                <Button
-                    variant="destructive"
-                    size="icon"
-                    /*
-                    onClick={() => {
-                        router.delete(destroy(producto.id).url);
-                    }}
-                >
-                    Eliminar
-                </Button>
-            );
+            if (producto.puede_eliminar && auth.rol === 'admin') {
+                return <DialogFormBajaProducto producto={producto} />;
+            }
         },
-    },*/
+    },
 ];

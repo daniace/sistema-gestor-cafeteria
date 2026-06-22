@@ -12,7 +12,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Producto extends Model
 {
-    /** @use HasFactory<ProductoFactory> */
+    protected $appends = ['puede_eliminar'];
+
+    /** @use HasFactoryProductoFactory> */
     use HasFactory;
 
     public function pedidos(): BelongsToMany
@@ -20,5 +22,8 @@ class Producto extends Model
         return $this->belongsToMany(Pedido::class)
             ->withPivot('cantidad', 'precio_unitario')
             ->withTimestamps();
+    protected function getPuedeEliminarAttribute(): bool
+    {
+        return $this->producto_esta_vigente;
     }
 }
