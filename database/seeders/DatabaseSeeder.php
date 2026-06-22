@@ -2,26 +2,25 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         UserFactory::new()->create([
             'nombre' => 'Admin',
             'apellido' => 'User',
             'email' => 'admin@example.com',
             'password' => bcrypt('password'),
             'rol' => 'admin',
+        ]);
+
+        $this->call([
+            MesaSeeder::class,
+            MetodoPagoSeeder::class,
         ]);
     }
 }
