@@ -83,6 +83,7 @@ export default function VistaUsuario({ usuarios }: { usuarios: User[] }) {
                                                         type="text"
                                                         required
                                                         autoFocus
+                                                        pattern="^[\p{L}\s]+$"
                                                         autoComplete="nombre"
                                                         name="nombre"
                                                         placeholder="Nombre"
@@ -95,6 +96,7 @@ export default function VistaUsuario({ usuarios }: { usuarios: User[] }) {
                                                         id="apellido"
                                                         type="text"
                                                         required
+                                                        pattern="^[\p{L}\s]+$"
                                                         autoFocus
                                                         autoComplete="apellido"
                                                         name="apellido"
@@ -113,6 +115,7 @@ export default function VistaUsuario({ usuarios }: { usuarios: User[] }) {
                                                         type="text"
                                                         required
                                                         autoFocus
+                                                        pattern="^[0-9]{8}$"
                                                         autoComplete="dni"
                                                         name="dni"
                                                         placeholder="DNI"
@@ -178,8 +181,8 @@ export default function VistaUsuario({ usuarios }: { usuarios: User[] }) {
                                                         >
                                                             Seleccionar Rol
                                                         </NativeSelectOption>
-                                                        <NativeSelectOption value="user">
-                                                            Usuario
+                                                        <NativeSelectOption value="vendedor">
+                                                            Vendedor
                                                         </NativeSelectOption>
                                                         <NativeSelectOption value="admin">
                                                             Admin

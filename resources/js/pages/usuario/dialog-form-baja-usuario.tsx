@@ -45,7 +45,7 @@ export default function DialogFormBajaUsuario({ usuario }: { usuario: User }) {
                     {() => (
                         <>
                             <DialogHeader>
-                                <DialogTitle>Eliminar Producto</DialogTitle>
+                                <DialogTitle>Eliminar Usuario</DialogTitle>
                             </DialogHeader>
                             <FieldGroup>
                                 <Field className="flex gap-2">

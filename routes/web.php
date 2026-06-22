@@ -17,7 +17,6 @@ Route::inertia('/', 'auth/login', [
 ])->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
     Route::get('inicio', function () {
         return Inertia::render('inicio', [
             'productos' => Producto::all(),
@@ -36,7 +35,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-Route::middleware(['auth', 'verified','role:admin,vendedor'])->group(function () {
     Route::get('productos', [ProductoController::class, 'index'])->name('producto');
     Route::post('productos', [ProductoController::class, 'store'])->name('producto.store');
     Route::get('productos/{producto}/edit', [ProductoController::class, 'edit'])->name('producto.edit');

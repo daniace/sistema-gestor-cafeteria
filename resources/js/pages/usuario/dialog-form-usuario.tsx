@@ -63,6 +63,7 @@ export default function DialogFormUsuario({ usuario }: { usuario: User }) {
                                         type="text"
                                         required
                                         autoFocus
+                                        pattern="^[\p{L}\s]+$"
                                         autoComplete="nombre"
                                         name="nombre"
                                         placeholder="Nombre"
@@ -83,6 +84,7 @@ export default function DialogFormUsuario({ usuario }: { usuario: User }) {
                                         type="text"
                                         required
                                         autoFocus
+                                        pattern="^[\p{L}\s]+$"
                                         autoComplete="apellido"
                                         name="apellido"
                                         placeholder="Apellido"
@@ -105,6 +107,7 @@ export default function DialogFormUsuario({ usuario }: { usuario: User }) {
                                         type="text"
                                         required
                                         autoFocus
+                                        pattern="[0-9]{8}"
                                         autoComplete="dni"
                                         name="dni"
                                         placeholder="DNI"
@@ -156,8 +159,8 @@ export default function DialogFormUsuario({ usuario }: { usuario: User }) {
                                         >
                                             Seleccionar Rol
                                         </NativeSelectOption>
-                                        <NativeSelectOption value="user">
-                                            Usuario
+                                        <NativeSelectOption value="vendedor">
+                                            Vendedor
                                         </NativeSelectOption>
                                         <NativeSelectOption value="admin">
                                             Admin

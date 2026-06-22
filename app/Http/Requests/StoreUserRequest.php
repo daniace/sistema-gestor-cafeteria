@@ -23,14 +23,14 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre' => ['required', 'string', 'max:255'],
-            'apellido' => ['required', 'string', 'max:255'],
+            'nombre' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
+            'apellido' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
             'dni' => ['required', 'string', 'max:255', 'unique:users'],
             'estado_cuenta_usuario' => ['boolean'],
             'causa_eliminacion' => ['nullable', 'string'],
-            'rol' => ['required', 'string', 'in:user,admin'],
+            'rol' => ['required', 'string', 'in:vendedor,admin'],
         ];
     }
 }

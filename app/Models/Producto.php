@@ -22,6 +22,8 @@ class Producto extends Model
         return $this->belongsToMany(Pedido::class)
             ->withPivot('cantidad', 'precio_unitario')
             ->withTimestamps();
+    }
+
     protected function getPuedeEliminarAttribute(): bool
     {
         return $this->producto_esta_vigente;
