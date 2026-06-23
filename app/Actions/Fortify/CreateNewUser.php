@@ -33,7 +33,7 @@ class CreateNewUser implements CreatesNewUsers
             'dni' => $input['dni'],
             'estado_cuenta_usuario' => true,
             'causa_eliminacion' => null,
-            'nro_rol' => Rol::where('nombre_rol', 'vendedor')->first()->id,
+            'nro_rol' => Rol::where('nombre_rol', 'vendedor')->first()?->id ?? 2,
         ]);
     }
 }

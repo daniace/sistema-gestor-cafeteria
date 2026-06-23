@@ -1,5 +1,6 @@
-import { Form } from '@inertiajs/react';
+import { Form, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,16 +21,20 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { update } from '@/routes/producto';
 import type { Producto } from '@/types/models';
+import type { CategoriaProducto } from '@/types/models';
 
 export default function DialogFormProducto({
     producto,
 }: {
     producto: Producto;
 }) {
+    const { categorias } = usePage().props as {
+        categorias: CategoriaProducto[];
+    };
     const [dialogOpen, setDialogOpen] = useState(false);
     const [formData, setFormData] = useState({
         descripcion: producto.descripcion,
-        categoria: producto.categoria,
+        categoria_id: producto.categoria_id,
         precio: producto.precio,
         stock_actual: producto.stock_actual,
         stock_minimo: producto.stock_minimo,
@@ -47,7 +52,7 @@ export default function DialogFormProducto({
                     })}
                     resetOnSuccess={[
                         'descripcion',
-                        'categoria',
+                        'categoria_id',
                         'precio',
                         'stock_actual',
                         'stock_minimo',
@@ -84,24 +89,27 @@ export default function DialogFormProducto({
                                         className="mt-2"
                                     />
                                     <NativeSelect
-                                        name="categoria"
+                                        name="categoria_id"
                                         required
                                         className="w-full"
+                                        value={String(formData.categoria_id)}
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                categoria_id: parseInt(
+                                                    e.target.value,
+                                                ),
+                                            })
+                                        }
                                     >
-                                        <NativeSelectOption
-                                            selected
-                                            value={producto.categoria}
-                                        >
-                                            {producto.categoria === 1
-                                                ? 'Helados'
-                                                : 'Postres'}
-                                        </NativeSelectOption>
-                                        <NativeSelectOption value="1">
-                                            Helados
-                                        </NativeSelectOption>
-                                        <NativeSelectOption value="2">
-                                            Postres
-                                        </NativeSelectOption>
+                                        {categorias.map((cat) => (
+                                            <NativeSelectOption
+                                                key={cat.id}
+                                                value={String(cat.id)}
+                                            >
+                                                {cat.nombre_categoria_producto}
+                                            </NativeSelectOption>
+                                        ))}
                                     </NativeSelect>
                                 </Field>
 

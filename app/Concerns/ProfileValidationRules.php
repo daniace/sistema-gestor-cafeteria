@@ -21,7 +21,6 @@ trait ProfileValidationRules
             'dni' => $this->dniRules($userId),
             'estado_cuenta_usuario' => $this->estadoCuentaUsuarioRules(),
             'causa_eliminacion' => $this->causaEliminacionRules(),
-            'nro_rol' => $this->roleRules(),
         ];
     }
 

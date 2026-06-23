@@ -1,9 +1,11 @@
 <?php
 
+use Database\Seeders\RolSeeder;
 use Laravel\Fortify\Features;
 
 beforeEach(function () {
     $this->skipUnlessFortifyFeature(Features::registration());
+    $this->seed(RolSeeder::class);
 });
 
 test('registration screen can be rendered', function () {

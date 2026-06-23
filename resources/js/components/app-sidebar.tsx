@@ -20,7 +20,8 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { inicio, producto, usuario } from '@/routes';
+import { inicio, producto, usuario, reporte } from '@/routes';
+import venta from '@/routes/venta';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -31,7 +32,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Venta',
-        href: '',
+        href: venta.index(),
         icon: SealPercentIcon,
         roles: ['admin', 'vendedor'],
     },
@@ -42,8 +43,8 @@ const mainNavItems: NavItem[] = [
         roles: ['admin', 'vendedor'],
     },
     {
-        title: 'Informe',
-        href: '',
+        title: 'Reporte',
+        href: reporte(),
         icon: ChartLineIcon,
         roles: ['admin'],
     },

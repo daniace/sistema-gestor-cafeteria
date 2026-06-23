@@ -18,6 +18,7 @@ export const columns: ColumnDef<Mesa>[] = [
         header: 'Estado',
         cell: ({ getValue }) => {
             const estado = getValue() as string;
+
             return estado === 'ocupada' ? 'Ocupada' : 'Libre';
         },
     },
@@ -26,14 +27,13 @@ export const columns: ColumnDef<Mesa>[] = [
         header: 'Acciones',
         cell: ({ row }) => {
             const mesa = row.original;
+
             return (
                 <div className="flex gap-2">
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() =>
-                            router.get(edit({ mesa: mesa.id }).url)
-                        }
+                        onClick={() => router.get(edit({ mesa: mesa.id }).url)}
                     >
                         Editar
                     </Button>

@@ -1,10 +1,8 @@
 import { Head, Form } from '@inertiajs/react';
 import { useState } from 'react';
 
-//Form arriba
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-//import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import {
@@ -17,7 +15,7 @@ import AppLayout from '@/layouts/app-layout';
 import { inicio, producto } from '@/routes';
 import { store } from '@/routes/producto';
 import type { BreadcrumbItem } from '@/types';
-import type { Producto } from '@/types/models';
+import type { CategoriaProducto, Producto } from '@/types/models';
 
 import { columns } from './columns';
 import { DataTable } from './data-tabla-productos';
@@ -31,8 +29,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function vistaProducto({
     productos,
+    categorias,
 }: {
     productos: Producto[];
+    categorias: CategoriaProducto[];
 }) {
     const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -55,7 +55,7 @@ export default function vistaProducto({
                                     {...store.form()}
                                     resetOnSuccess={[
                                         'descripcion',
-                                        'categoria',
+                                        'categoria_id',
                                         'stock_actual',
                                         'stock_minimo',
                                         'precio',
@@ -85,19 +85,26 @@ export default function vistaProducto({
                                                 />
                                             </div>
                                             <NativeSelect
-                                                name="categoria"
+                                                name="categoria_id"
                                                 required
                                                 className="w-full"
                                             >
                                                 <NativeSelectOption
                                                     disabled
-                                                    value="0"
+                                                    value=""
                                                 >
-                                                    Ninguna
+                                                    Selecciona una categoría
                                                 </NativeSelectOption>
-                                                <NativeSelectOption value="1">
-                                                    Helados
-                                                </NativeSelectOption>
+                                                {categorias.map((cat) => (
+                                                    <NativeSelectOption
+                                                        key={cat.id}
+                                                        value={String(cat.id)}
+                                                    >
+                                                        {
+                                                            cat.nombre_categoria_producto
+                                                        }
+                                                    </NativeSelectOption>
+                                                ))}
                                             </NativeSelect>
                                             <div className="flex gap-2">
                                                 <Input

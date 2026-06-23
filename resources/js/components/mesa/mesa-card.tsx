@@ -6,13 +6,24 @@ function diffForHumans(dateStr: string): string {
     const diffMs = Date.now() - new Date(dateStr).getTime();
     const mins = Math.floor(diffMs / 60000);
     const hrs = Math.floor(mins / 60);
-    if (mins < 1) return 'un momento';
-    if (mins < 60) return `${mins} min`;
+
+    if (mins < 1) {
+        return 'un momento';
+    }
+
+    if (mins < 60) {
+        return `${mins} min`;
+    }
+
     return `${hrs}h ${mins % 60}m`;
 }
 
 export default function MesaCard({
-    numero, capacidad, estado, updated_at, onClick,
+    numero,
+    capacidad,
+    estado,
+    updated_at,
+    onClick,
 }: Mesa & { onClick?: () => void }) {
     const ocupada = estado === 'ocupada';
 

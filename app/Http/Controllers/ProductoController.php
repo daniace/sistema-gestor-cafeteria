@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DestroyProductoRequest;
 use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
+use App\Models\CategoriaProducto;
 use App\Models\Producto;
 use Inertia\Inertia;
 
@@ -16,9 +17,11 @@ class ProductoController extends Controller
     public function index()
     {
         $productos = Producto::all();
+        $categorias = CategoriaProducto::all();
 
         return Inertia::render('producto/vista-producto', [
             'productos' => $productos,
+            'categorias' => $categorias,
         ]);
 
     }

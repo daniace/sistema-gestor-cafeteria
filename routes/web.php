@@ -3,6 +3,7 @@
 use App\Http\Controllers\MesaController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VentaController;
 use App\Models\Mesa;
@@ -61,6 +62,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('ventas', [VentaController::class, 'store'])->name('venta.store');
     Route::get('ventas', [VentaController::class, 'index'])->name('venta.index');
     Route::get('ventas/{venta}/ticket', [VentaController::class, 'ticket'])->name('venta.ticket');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('reportes', [ReportController::class, 'index'])->name('reporte');
 });
 
 require __DIR__.'/settings.php';

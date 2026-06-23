@@ -346,6 +346,7 @@ export default function DialogPedidoMesa({
                                     {productos.map((producto) => {
                                         const cantidad =
                                             seleccion[producto.id] ?? 0;
+
                                         return (
                                             <div
                                                 key={producto.id}

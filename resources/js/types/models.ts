@@ -1,7 +1,12 @@
+export type CategoriaProducto = {
+    id: number;
+    nombre_categoria_producto: string;
+};
+
 export type Producto = {
     id: number;
     descripcion: string;
-    categoria: number;
+    categoria_id: number;
     precio: number;
     stock_actual: number;
     stock_minimo: number;

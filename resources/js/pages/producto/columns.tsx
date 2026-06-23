@@ -2,9 +2,8 @@
 
 import { usePage } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
-//import { ArrowUpDown } from 'lucide-react';
 
-import type { Producto } from '@/types/models';
+import type { CategoriaProducto, Producto } from '@/types/models';
 import DialogFormBajaProducto from './dialog-form-baja-producto';
 import DialogFormProducto from './dialog-form-producto';
 
@@ -14,8 +13,18 @@ export const columns: ColumnDef<Producto>[] = [
         header: 'Descripcion',
     },
     {
-        accessorKey: 'categoria',
+        accessorKey: 'categoria_id',
         header: 'Categoria',
+        cell: ({ row }) => {
+            const { categorias } = usePage().props as {
+                categorias: CategoriaProducto[];
+            };
+            const cat = categorias.find(
+                (c) => c.id === row.original.categoria_id,
+            );
+
+            return cat?.nombre_categoria_producto ?? row.original.categoria_id;
+        },
     },
     {
         accessorKey: 'updated_at',
@@ -29,19 +38,6 @@ export const columns: ColumnDef<Producto>[] = [
     {
         accessorKey: 'stock_actual',
         header: 'Stock-Actual',
-        /* header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === 'asc')
-                    }
-                >
-                    Email
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            );
-        }, */
     },
     {
         accessorKey: 'stock_minimo',

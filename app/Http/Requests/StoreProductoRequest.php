@@ -26,7 +26,7 @@ class StoreProductoRequest extends FormRequest
         // esto es para validar la peticion ajax
         return [
             'descripcion' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
-            'categoria' => ['required', 'integer', 'max:255'],
+            'categoria_id' => ['required', 'integer', 'exists:categoria_producto,id'],
             'stock_actual' => ['required', 'integer', 'max:9999'],
             'stock_minimo' => ['required', 'integer', 'max:9999'],
             'precio' => ['required', 'decimal:0,2', 'max:9999.99'],

@@ -1,11 +1,5 @@
 'use client';
 
-import type {
-    ColumnDef,
-    ColumnFiltersState,
-    SortingState,
-    VisibilityState,
-} from '@tanstack/react-table';
 import {
     flexRender,
     getCoreRowModel,
@@ -14,16 +8,27 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table';
+
+import type {
+    ColumnDef,
+    ColumnFiltersState,
+    SortingState,
+    VisibilityState,
+} from '@tanstack/react-table';
+
 import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
+
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
 import { Input } from '@/components/ui/input';
+
 import {
     Table,
     TableBody,
@@ -69,15 +74,15 @@ export function DataTable<TData, TValue>({
         <div>
             <div className="flex items-center py-4">
                 <Input
-                    placeholder="Filter emails..."
+                    placeholder="Filtrar Ventas..."
                     value={
                         (table
-                            .getColumn('email')
+                            .getColumn('pedido.cliente')
                             ?.getFilterValue() as string) ?? ''
                     }
                     onChange={(event) =>
                         table
-                            .getColumn('email')
+                            .getColumn('pedido.cliente')
                             ?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm"

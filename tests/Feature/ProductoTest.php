@@ -1,14 +1,21 @@
 <?php
 
+use App\Models\CategoriaProducto;
+use App\Models\Rol;
 use App\Models\User;
 
-beforeEach(fn () => $this->actingAs(User::factory()->create()));
+beforeEach(function () {
+    Rol::create(['id' => 1, 'nombre_rol' => 'admin']);
+    Rol::create(['id' => 2, 'nombre_rol' => 'vendedor']);
+    CategoriaProducto::factory()->create(['id' => 1]);
+    $this->actingAs(User::factory()->create());
+});
 
 // TEST DE DESCRIPCIÓN
 test('DescripcionRequerida', function () {
     $this->post(route('producto.store'), [
         'descripcion' => '',
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => 10,
         'stock_minimo' => 5,
         'precio' => 999,
@@ -18,7 +25,7 @@ test('DescripcionRequerida', function () {
 test('DescripcionMayorAMaximoCaracteres', function () {
     $this->post(route('producto.store'), [
         'descripcion' => str_repeat('a', 256),
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => 10,
         'stock_minimo' => 5,
         'precio' => 1000.00,
@@ -28,7 +35,7 @@ test('DescripcionMayorAMaximoCaracteres', function () {
 test('DescripcionFormatoInvalido', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 0,
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => 10,
         'stock_minimo' => 5,
         'precio' => 99.999,
@@ -38,7 +45,7 @@ test('DescripcionFormatoInvalido', function () {
 test('DescripcionFormatoInvalidoCadenaConNumeros', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'Helado 0',
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => 10,
         'stock_minimo' => 5,
         'precio' => 99.9,
@@ -50,38 +57,38 @@ test('DescripcionFormatoInvalidoCadenaConNumeros', function () {
 test('CategoriaRequerida', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'prueba',
-        'categoria' => '',
+        'categoria_id' => '',
         'stock_actual' => 10,
         'stock_minimo' => 5,
         'precio' => 999,
-    ])->assertSessionHasErrors('categoria');
+    ])->assertSessionHasErrors('categoria_id');
 });
 
 test('CategoriaMayorAMaximoCaracteres', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'prueba',
-        'categoria' => str_repeat('a', 256),
+        'categoria_id' => str_repeat('a', 256),
         'stock_actual' => 10,
         'stock_minimo' => 5,
         'precio' => 1000.00,
-    ])->assertSessionHasErrors('categoria');
+    ])->assertSessionHasErrors('categoria_id');
 });
 
 test('CategoriaFormatoInvalido', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'prueba',
-        'categoria' => 'a',
+        'categoria_id' => 'a',
         'stock_actual' => 10,
         'stock_minimo' => 5,
         'precio' => 99.99,
-    ])->assertSessionHasErrors('categoria');
+    ])->assertSessionHasErrors('categoria_id');
 });
 
 // TESTS DE STOCK ACTUAL
 test('StockActualRequerido', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'prueba',
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => '',
         'stock_minimo' => 5,
         'precio' => 99.99,
@@ -91,7 +98,7 @@ test('StockActualRequerido', function () {
 test('StockActualConDecimales', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'Test',
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => 10.02,
         'stock_minimo' => 5,
         'precio' => 99.99,
@@ -101,7 +108,7 @@ test('StockActualConDecimales', function () {
 test('StockActualMayorAlLimite', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'Test',
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => 10000.00,
         'stock_minimo' => 5,
         'precio' => 99.99,
@@ -111,7 +118,7 @@ test('StockActualMayorAlLimite', function () {
 test('StockActualFormatoCadena', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'Test',
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => '10',
         'stock_minimo' => 5,
         'precio' => 99.99,
@@ -122,7 +129,7 @@ test('StockActualFormatoCadena', function () {
 test('StockMinimoRequerido', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'prueba',
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => 10,
         'stock_minimo' => '',
         'precio' => 123.00,
@@ -132,7 +139,7 @@ test('StockMinimoRequerido', function () {
 test('StockMinimoMayorALimite', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'Test',
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => 10,
         'stock_minimo' => 10000,
         'precio' => 1000.00,
@@ -142,7 +149,7 @@ test('StockMinimoMayorALimite', function () {
 test('StockMinimoConDecimales', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'Test',
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => 10,
         'stock_minimo' => 5.5,
         'precio' => 1000.00,
@@ -152,7 +159,7 @@ test('StockMinimoConDecimales', function () {
 test('StockMinimoFormatoCadena', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'Test',
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => 10,
         'stock_minimo' => '5',
         'precio' => 99.99,
@@ -163,7 +170,7 @@ test('StockMinimoFormatoCadena', function () {
 test('PrecioRequerido', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'prueba',
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => 10,
         'stock_minimo' => 5,
         'precio' => '',
@@ -173,7 +180,7 @@ test('PrecioRequerido', function () {
 test('PrecioMayorA2Decimales', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'Test',
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => 10,
         'stock_minimo' => 5,
         'precio' => 99.999,
@@ -183,7 +190,7 @@ test('PrecioMayorA2Decimales', function () {
 test('PrecioMayorAlLimite', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'Test',
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => 10,
         'stock_minimo' => 5,
         'precio' => 10000.00,
@@ -193,7 +200,7 @@ test('PrecioMayorAlLimite', function () {
 test('PrecioFormatoCadena', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'Test',
-        'categoria' => 1,
+        'categoria_id' => 1,
         'stock_actual' => 10,
         'stock_minimo' => 5,
         'precio' => '99.999',
