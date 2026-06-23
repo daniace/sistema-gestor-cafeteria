@@ -7,9 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VentaController;
 use App\Models\Mesa;
 use App\Models\MetodoPago;
-use App\Models\Pedido;
 use App\Models\Producto;
-
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
