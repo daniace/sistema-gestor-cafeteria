@@ -17,10 +17,10 @@ configureEcho({
     enabledTransports: ['ws', 'wss'],
 });
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'Viera\'s Coffee';
 
 createInertiaApp({
-    title: (title) => (title ? `${title} - ${appName}` : appName),
+    title: (title) => (title ? `${title} | ${appName}` : `${appName} | Sistema Gestor de Cafeterías`),
     resolve: (name) =>
         resolvePageComponent(
             `./pages/${name}.tsx`,
