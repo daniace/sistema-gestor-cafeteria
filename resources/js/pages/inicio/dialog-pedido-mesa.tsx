@@ -1,6 +1,16 @@
 import { router } from '@inertiajs/react';
-import { CashRegister, Minus, Plus, Receipt } from '@phosphor-icons/react';
+import { CashRegister, Minus, PencilSimpleLine, Plus, Receipt, XCircle } from '@phosphor-icons/react';
 import { useState, useEffect } from 'react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -11,7 +21,7 @@ import {
 } from '@/components/ui/dialog';
 import { broadcastMesaUpdate } from '@/hooks/use-cross-tab-sync';
 import DialogCobrar from '@/pages/inicio/dialog-cobrar';
-import { store } from '@/routes/pedido';
+import { cancel, store, update } from '@/routes/pedido';
 import type { Mesa, MetodoPago, Producto } from '@/types/models';
 
 type ProductoSeleccionado = {
@@ -50,6 +60,10 @@ export default function DialogPedidoMesa({
     } | null>(null);
     const [cobrarOpen, setCobrarOpen] = useState(false);
     const [ventaId, setVentaId] = useState<number | null>(null);
+    const [confirmCancelOpen, setConfirmCancelOpen] = useState(false);
+    const [cancelando, setCancelando] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [updateSubmitting, setUpdateSubmitting] = useState(false);
 
     const productosList: ProductoSeleccionado[] = productos
         .filter((p) => (seleccion[p.id] ?? 0) > 0)
@@ -93,6 +107,8 @@ export default function DialogPedidoMesa({
         setPedidoCreado(null);
         setVentaId(null);
         setSubmitting(false);
+        setConfirmCancelOpen(false);
+        setCancelando(false);
     }
 
     function handleClose(open: boolean) {
@@ -143,6 +159,82 @@ export default function DialogPedidoMesa({
                 },
                 onError: () => {
                     setSubmitting(false);
+                },
+            },
+        );
+    }
+
+    function handleCancel() {
+        if (!pedidoId) {
+            return;
+        }
+
+        setCancelando(true);
+        router.delete(cancel(pedidoId).url, {
+            preserveScroll: true,
+            onSuccess: () => {
+                broadcastMesaUpdate();
+                setConfirmCancelOpen(false);
+                setCancelando(false);
+                onOpenChange(false);
+                reset();
+            },
+            onError: () => {
+                setCancelando(false);
+                setConfirmCancelOpen(false);
+            },
+        });
+    }
+
+    function handleStartEdit() {
+        if (!pedidoCreado) {
+return;
+}
+
+        const newSeleccion: Record<number, number> = {};
+        pedidoCreado.productos.forEach((p) => {
+            newSeleccion[p.id] = p.cantidad;
+        });
+        setSeleccion(newSeleccion);
+        setCliente(pedidoCreado.cliente);
+        setIsEditing(true);
+    }
+
+    function handleCancelEdit() {
+        setIsEditing(false);
+    }
+
+    function handleUpdateSubmit() {
+        if (!pedidoId || productosList.length === 0) {
+return;
+}
+
+        setUpdateSubmitting(true);
+        router.put(
+            update(pedidoId).url,
+            {
+                productos: productosList.map((p) => ({
+                    id: p.id,
+                    cantidad: p.cantidad,
+                    precio_unitario: p.precio,
+                })),
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    broadcastMesaUpdate();
+                    setPedidoCreado({
+                        id: pedidoId,
+                        cliente,
+                        numero_mesa: mesa?.numero ?? 0,
+                        total,
+                        productos: productosList,
+                    });
+                    setIsEditing(false);
+                    setUpdateSubmitting(false);
+                },
+                onError: () => {
+                    setUpdateSubmitting(false);
                 },
             },
         );
@@ -251,6 +343,110 @@ export default function DialogPedidoMesa({
                                 </Button>
                             </DialogFooter>
                         </>
+                    ) : isEditing ? (
+                        /* ── Estado Edit: Editando pedido ── */
+                        <>
+                            <DialogHeader className="px-6 pt-6">
+                                <DialogTitle>
+                                    Editando Pedido #{pedidoId} — Mesa{' '}
+                                    {String(mesa?.numero ?? '').padStart(2, '0')}
+                                </DialogTitle>
+                            </DialogHeader>
+
+                            <div className="flex-1 overflow-y-auto px-6 py-4">
+                                <div className="mb-4">
+                                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                                        Cliente
+                                    </label>
+                                    <input
+                                        className={inputCls}
+                                        value={cliente}
+                                        onChange={(e) =>
+                                            setCliente(e.target.value)
+                                        }
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    {productos.map((producto) => {
+                                        const cantidad =
+                                            seleccion[producto.id] ?? 0;
+
+                                        return (
+                                            <div
+                                                key={producto.id}
+                                                className="flex items-center justify-between rounded-xl border border-border bg-input/20 px-3 py-2.5"
+                                            >
+                                                <div className="flex-1">
+                                                    <p className="text-sm font-medium">
+                                                        {producto.descripcion}
+                                                    </p>
+                                                    <p className="text-xs text-muted-foreground">
+                                                        $
+                                                        {producto.precio.toFixed(2)}
+                                                    </p>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <Button
+                                                        variant="outline"
+                                                        size="icon-xs"
+                                                        onClick={() =>
+                                                            decrementar(
+                                                                producto.id,
+                                                            )
+                                                        }
+                                                    >
+                                                        <Minus className="size-3" />
+                                                    </Button>
+                                                    <span className="flex w-6 justify-center text-sm font-semibold tabular-nums">
+                                                        {cantidad}
+                                                    </span>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="icon-xs"
+                                                        onClick={() =>
+                                                            incrementar(
+                                                                producto.id,
+                                                            )
+                                                        }
+                                                    >
+                                                        <Plus className="size-3" />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                {productosList.length > 0 && (
+                                    <div className="mt-4 rounded-xl bg-muted/50 p-3 text-sm font-semibold">
+                                        <div className="flex justify-between">
+                                            <span>Total</span>
+                                            <span>${total.toFixed(2)}</span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <DialogFooter className="gap-2 border-t border-border px-6 py-4">
+                                <Button
+                                    variant="outline"
+                                    onClick={handleCancelEdit}
+                                >
+                                    Volver
+                                </Button>
+                                <Button
+                                    disabled={
+                                        productosList.length === 0 || updateSubmitting
+                                    }
+                                    onClick={handleUpdateSubmit}
+                                >
+                                    {updateSubmitting
+                                        ? 'Guardando...'
+                                        : 'Guardar Cambios'}
+                                </Button>
+                            </DialogFooter>
+                        </>
                     ) : pedidoId !== null && pedidoCreado ? (
                         /* ── Estado 2: Pedido creado, listo para cobrar ── */
                         <>
@@ -307,6 +503,20 @@ export default function DialogPedidoMesa({
                                     onClick={() => handleClose(false)}
                                 >
                                     Cerrar
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    onClick={handleStartEdit}
+                                >
+                                    <PencilSimpleLine className="size-4" />
+                                    Editar
+                                </Button>
+                                <Button
+                                    variant="destructive"
+                                    onClick={() => setConfirmCancelOpen(true)}
+                                >
+                                    <XCircle className="size-4" />
+                                    Cancelar Pedido
                                 </Button>
                                 <Button onClick={() => setCobrarOpen(true)}>
                                     <CashRegister className="size-4" />
@@ -427,6 +637,35 @@ export default function DialogPedidoMesa({
                     )}
                 </DialogContent>
             </Dialog>
+
+            <AlertDialog open={confirmCancelOpen} onOpenChange={setConfirmCancelOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Cancelar pedido</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            ¿Estás seguro de que deseas cancelar este pedido?
+                            Se liberará la mesa y se devolverán los productos al stock.
+                            Esta acción no se puede deshacer.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel asChild>
+                            <Button variant="outline" disabled={cancelando}>
+                                Volver
+                            </Button>
+                        </AlertDialogCancel>
+                        <AlertDialogAction asChild>
+                            <Button
+                                variant="destructive"
+                                disabled={cancelando}
+                                onClick={handleCancel}
+                            >
+                                {cancelando ? 'Cancelando...' : 'Sí, cancelar pedido'}
+                            </Button>
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
 
             <DialogCobrar
                 pedido={

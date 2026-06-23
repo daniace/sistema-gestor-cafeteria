@@ -41,11 +41,13 @@ import {
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    onPageDataChange?: (data: TData[]) => void;
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    onPageDataChange,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] =
@@ -69,6 +71,17 @@ export function DataTable<TData, TValue>({
             columnVisibility,
         },
     });
+
+    React.useEffect(() => {
+        const pageData = table.getRowModel().rows.map((r) => r.original);
+        onPageDataChange?.(pageData);
+    }, [
+        table.getState().pagination.pageIndex,
+        table.getState().pagination.pageSize,
+        table.getState().columnFilters,
+        table.getState().sorting,
+        data,
+    ]);
 
     return (
         <div>

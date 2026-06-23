@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\MetodoPago;
 use App\Models\Pedido;
 use App\Models\Producto;
 use App\Models\Venta;
@@ -13,67 +12,204 @@ class VentaSeeder extends Seeder
 {
     public function run(): void
     {
-        $productos = Producto::where('producto_esta_vigente', true)->get();
-        $metodoPagos = MetodoPago::where('habilitado', true)->get();
-        $nombres = [
-            'Juan Pérez', 'María García', 'Carlos López', 'Ana Martínez', 'Pedro Rodríguez',
-            'Laura Fernández', 'Diego González', 'Sofía Hernández', 'Luis Torres', 'Valentina Díaz',
-            'Mateo Álvarez', 'Camila Ruiz', 'Santiago Castillo', 'Isabella Ortiz', 'Benjamín Morales',
-            'Emilia Silva', 'Sebastián Rojas', 'Luciana Vargas', 'Joaquín Mendoza', 'Catalina Herrera',
-            'Samuel Cruz', 'Gabriela Reyes', 'Daniel Vega', 'Victoria Peña', 'Matías Flores',
-            'Martina Campos', 'Adrián Núñez', 'Abigail Delgado', 'Lucas Paredes', 'Constanza Aguirre',
-            'Felipe Guerrero', 'Josefina Cárdenas', 'Nicolás Salazar', 'Catalina Moreno', 'Tomás Medina',
-            'Florencia Romero', 'Maximiliano Castro', 'Agustina Paz', 'Julián Valenzuela', 'Amanda Cortés',
-            'Emilio Farías', 'Javiera Correa', 'Alonso Bustos', 'Fernanda Bravo', 'Cristóbal Vega',
-            'Trinidad Sandoval', 'Martín Rivas', 'Antonia Pizarro', 'Vicente Gallardo', 'Emilia Peña',
-        ];
-        $startDate = Carbon::parse('2025-12-01');
-        $endDate = Carbon::parse('2026-06-23');
+        $productos = Producto::where('producto_esta_vigente', true)->get()->keyBy('descripcion');
 
-        for ($i = 0; $i < 1000; $i++) {
-            $createdAt = Carbon::createFromTimestamp(
-                mt_rand($startDate->timestamp, $endDate->timestamp)
-            );
+        $ventas = [
+            // Ventas con Efectivo (metodo_pago_id = 1, descuento = 0)
+            [
+                'cliente' => 'Juan Pérez',
+                'numero_mesa' => 3,
+                'metodo_pago_id' => 1,
+                'items' => [
+                    ['producto' => 'Café Latte', 'cantidad' => 2],
+                    ['producto' => 'Medialuna (x1)', 'cantidad' => 2],
+                ],
+            ],
+            [
+                'cliente' => 'María García',
+                'numero_mesa' => 5,
+                'metodo_pago_id' => 1,
+                'items' => [
+                    ['producto' => 'Capuchino', 'cantidad' => 1],
+                    ['producto' => 'Cheesecake', 'cantidad' => 1],
+                ],
+            ],
+            [
+                'cliente' => 'Pedro Rodríguez',
+                'numero_mesa' => 1,
+                'metodo_pago_id' => 1,
+                'items' => [
+                    ['producto' => 'Tostado de Jamón y Queso', 'cantidad' => 1],
+                    ['producto' => 'Café Americano', 'cantidad' => 1],
+                    ['producto' => 'Limonada Natural', 'cantidad' => 1],
+                ],
+            ],
+
+            // Ventas con Débito (metodo_pago_id = 2, descuento = 0)
+            [
+                'cliente' => 'Ana Martínez',
+                'numero_mesa' => 2,
+                'metodo_pago_id' => 2,
+                'items' => [
+                    ['producto' => 'Smoothie de Frutilla', 'cantidad' => 2],
+                    ['producto' => 'Bowl Veggie con Quinoa', 'cantidad' => 1],
+                ],
+            ],
+            [
+                'cliente' => 'Carlos López',
+                'numero_mesa' => 7,
+                'metodo_pago_id' => 2,
+                'items' => [
+                    ['producto' => 'Té Chai', 'cantidad' => 1],
+                    ['producto' => 'Brownie con Helado', 'cantidad' => 1],
+                ],
+            ],
+            [
+                'cliente' => 'Laura Fernández',
+                'numero_mesa' => 4,
+                'metodo_pago_id' => 2,
+                'items' => [
+                    ['producto' => 'Iced Latte', 'cantidad' => 1],
+                    ['producto' => 'Sándwich Veggie', 'cantidad' => 1],
+                    ['producto' => 'Helado de Chocolate (2 bochas)', 'cantidad' => 1],
+                ],
+            ],
+
+            // Ventas con Crédito (metodo_pago_id = 3, descuento = 0)
+            [
+                'cliente' => 'Diego González',
+                'numero_mesa' => 6,
+                'metodo_pago_id' => 3,
+                'items' => [
+                    ['producto' => 'Café Americano', 'cantidad' => 3],
+                    ['producto' => 'Medialuna (x1)', 'cantidad' => 3],
+                ],
+            ],
+            [
+                'cliente' => 'Sofía Hernández',
+                'numero_mesa' => 8,
+                'metodo_pago_id' => 3,
+                'items' => [
+                    ['producto' => 'Iced Latte', 'cantidad' => 1],
+                    ['producto' => 'Cheesecake', 'cantidad' => 1],
+                    ['producto' => 'Helado de Vainilla (2 bochas)', 'cantidad' => 1],
+                ],
+            ],
+            [
+                'cliente' => 'Luis Torres',
+                'numero_mesa' => 10,
+                'metodo_pago_id' => 3,
+                'items' => [
+                    ['producto' => 'Tostado de Jamón y Queso', 'cantidad' => 2],
+                    ['producto' => 'Limonada Natural', 'cantidad' => 2],
+                    ['producto' => 'Café Latte', 'cantidad' => 2],
+                ],
+            ],
+
+            // Ventas con QR (metodo_pago_id = 4, descuento = 5%)
+            [
+                'cliente' => 'Valentina Díaz',
+                'numero_mesa' => 9,
+                'metodo_pago_id' => 4,
+                'items' => [
+                    ['producto' => 'Capuchino', 'cantidad' => 1],
+                    ['producto' => 'Bowl Veggie con Quinoa', 'cantidad' => 1],
+                    ['producto' => 'Helado de Chocolate (2 bochas)', 'cantidad' => 1],
+                ],
+            ],
+            [
+                'cliente' => 'Mateo Álvarez',
+                'numero_mesa' => 2,
+                'metodo_pago_id' => 4,
+                'items' => [
+                    ['producto' => 'Café Latte', 'cantidad' => 1],
+                    ['producto' => 'Sándwich Veggie', 'cantidad' => 1],
+                ],
+            ],
+            [
+                'cliente' => 'Camila Ruiz',
+                'numero_mesa' => 5,
+                'metodo_pago_id' => 4,
+                'items' => [
+                    ['producto' => 'Smoothie de Frutilla', 'cantidad' => 1],
+                    ['producto' => 'Brownie con Helado', 'cantidad' => 1],
+                    ['producto' => 'Té Chai', 'cantidad' => 1],
+                ],
+            ],
+
+            // Más ventas variadas
+            [
+                'cliente' => 'Benjamín Morales',
+                'numero_mesa' => 1,
+                'metodo_pago_id' => 1,
+                'items' => [
+                    ['producto' => 'Café Americano', 'cantidad' => 1],
+                    ['producto' => 'Medialuna (x1)', 'cantidad' => 3],
+                ],
+            ],
+            [
+                'cliente' => 'Isabella Ortiz',
+                'numero_mesa' => 4,
+                'metodo_pago_id' => 2,
+                'items' => [
+                    ['producto' => 'Iced Latte', 'cantidad' => 2],
+                    ['producto' => 'Cheesecake', 'cantidad' => 2],
+                ],
+            ],
+            [
+                'cliente' => 'Santiago Castillo',
+                'numero_mesa' => 3,
+                'metodo_pago_id' => 3,
+                'items' => [
+                    ['producto' => 'Capuchino', 'cantidad' => 2],
+                    ['producto' => 'Tostado de Jamón y Queso', 'cantidad' => 1],
+                    ['producto' => 'Helado de Vainilla (2 bochas)', 'cantidad' => 2],
+                ],
+            ],
+        ];
+
+        $createdAt = Carbon::parse('2026-06-22 10:00:00');
+
+        foreach ($ventas as $index => $ventaData) {
+            $pedidoCreatedAt = $createdAt->copy()->addHours($index);
 
             $pedido = Pedido::create([
-                'cliente' => $nombres[array_rand($nombres)],
+                'cliente' => $ventaData['cliente'],
                 'estado' => 'completado',
                 'total' => 0,
                 'user_id' => 1,
-                'numero_mesa' => rand(1, 10),
-                'created_at' => $createdAt,
-                'updated_at' => $createdAt,
+                'numero_mesa' => $ventaData['numero_mesa'],
+                'created_at' => $pedidoCreatedAt,
+                'updated_at' => $pedidoCreatedAt,
             ]);
 
-            $itemsCount = rand(1, 5);
             $totalOriginal = 0;
-            $selected = $productos->random($itemsCount);
-
             $syncData = [];
-            foreach ($selected as $producto) {
-                $cantidad = rand(1, 3);
+
+            foreach ($ventaData['items'] as $item) {
+                $producto = $productos->get($item['producto']);
                 $syncData[$producto->id] = [
-                    'cantidad' => $cantidad,
+                    'cantidad' => $item['cantidad'],
                     'precio_unitario' => $producto->precio,
                 ];
-                $totalOriginal += $cantidad * $producto->precio;
+                $totalOriginal += $item['cantidad'] * $producto->precio;
             }
 
             $pedido->productos()->sync($syncData);
             $pedido->update(['total' => $totalOriginal]);
 
-            $metodoPago = $metodoPagos->random();
-            $descuento = (float) $metodoPago->descuento;
+            $metodoPagoId = $ventaData['metodo_pago_id'];
+            $descuento = $metodoPagoId === 4 ? 5.00 : 0;
             $totalFinal = $totalOriginal - ($totalOriginal * $descuento / 100);
 
             Venta::create([
                 'pedido_id' => $pedido->id,
-                'metodo_pago_id' => $metodoPago->id,
+                'metodo_pago_id' => $metodoPagoId,
                 'total_original' => $totalOriginal,
                 'total_final' => $totalFinal,
                 'descuento_aplicado' => $descuento,
-                'created_at' => $createdAt,
-                'updated_at' => $createdAt,
+                'created_at' => $pedidoCreatedAt,
+                'updated_at' => $pedidoCreatedAt,
             ]);
         }
     }

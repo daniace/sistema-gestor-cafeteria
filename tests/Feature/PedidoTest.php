@@ -246,3 +246,100 @@ test('no modifica pedido completado', function () {
 
     expect($response->isForbidden() || $response->isRedirect())->toBeTrue();
 });
+
+/* ─────────── CANCEL ─────────── */
+
+test('puede cancelar pedido pendiente', function () {
+    $user = User::factory()->create();
+    $mesa = Mesa::factory()->create(['estado' => 'libre']);
+    $producto = Producto::factory()->conStock(10)->create();
+
+    $this->actingAs($user)->post(route('pedido.store'), [
+        'numero_mesa' => $mesa->numero,
+        'cliente' => 'Test',
+        'productos' => [
+            ['id' => $producto->id, 'cantidad' => 3, 'precio_unitario' => $producto->precio],
+        ],
+    ]);
+
+    $pedido = Pedido::first();
+
+    $this->actingAs($user)->delete(route('pedido.cancel', $pedido));
+
+    $pedido->refresh();
+    expect($pedido->estado)->toBe('cancelado');
+    expect($pedido->productos)->toHaveCount(0);
+
+    $producto->refresh();
+    expect($producto->stock_actual)->toBe(10);
+
+    $mesa->refresh();
+    expect($mesa->estado)->toBe('libre');
+});
+
+test('no permite cancelar pedido completado', function () {
+    $user = User::factory()->create();
+    $mesa = Mesa::factory()->create();
+    $producto = Producto::factory()->conStock(10)->create();
+
+    $this->actingAs($user)->post(route('pedido.store'), [
+        'numero_mesa' => $mesa->numero,
+        'cliente' => 'Test',
+        'productos' => [
+            ['id' => $producto->id, 'cantidad' => 2, 'precio_unitario' => $producto->precio],
+        ],
+    ]);
+
+    $pedido = Pedido::first();
+    $pedido->update(['estado' => 'completado']);
+
+    $response = $this->actingAs($user)->delete(route('pedido.cancel', $pedido));
+
+    expect($response->isForbidden() || $response->isRedirect())->toBeTrue();
+});
+
+test('no permite cancelar pedido ya cancelado', function () {
+    $user = User::factory()->create();
+    $mesa = Mesa::factory()->create();
+    $producto = Producto::factory()->conStock(10)->create();
+
+    $this->actingAs($user)->post(route('pedido.store'), [
+        'numero_mesa' => $mesa->numero,
+        'cliente' => 'Test',
+        'productos' => [
+            ['id' => $producto->id, 'cantidad' => 2, 'precio_unitario' => $producto->precio],
+        ],
+    ]);
+
+    $pedido = Pedido::first();
+    $pedido->update(['estado' => 'cancelado']);
+
+    $response = $this->actingAs($user)->delete(route('pedido.cancel', $pedido));
+
+    expect($response->isForbidden() || $response->isRedirect())->toBeTrue();
+});
+
+test('restaura stock de todos los productos al cancelar', function () {
+    $user = User::factory()->create();
+    $mesa = Mesa::factory()->create();
+    $productoA = Producto::factory()->conStock(10)->create();
+    $productoB = Producto::factory()->conStock(5)->create();
+
+    $this->actingAs($user)->post(route('pedido.store'), [
+        'numero_mesa' => $mesa->numero,
+        'cliente' => 'Test',
+        'productos' => [
+            ['id' => $productoA->id, 'cantidad' => 4, 'precio_unitario' => $productoA->precio],
+            ['id' => $productoB->id, 'cantidad' => 2, 'precio_unitario' => $productoB->precio],
+        ],
+    ]);
+
+    $pedido = Pedido::first();
+
+    $this->actingAs($user)->delete(route('pedido.cancel', $pedido));
+
+    $productoA->refresh();
+    $productoB->refresh();
+    expect($productoA->stock_actual)->toBe(10);
+    expect($productoB->stock_actual)->toBe(5);
+});

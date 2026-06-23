@@ -1,8 +1,11 @@
 import { Head, Form } from '@inertiajs/react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import {
@@ -27,6 +30,21 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+const stockChartConfig = {
+    stock_actual: {
+        label: 'Stock Actual',
+        color: 'var(--color-chart-1)',
+    },
+    stock_minimo: {
+        label: 'Stock Mínimo',
+        color: 'var(--color-chart-2)',
+    },
+    critico: {
+        label: 'Estado Crítico',
+        color: 'var(--color-destructive)',
+    },
+} satisfies ChartConfig;
+
 export default function vistaProducto({
     productos,
     categorias,
@@ -35,6 +53,31 @@ export default function vistaProducto({
     categorias: CategoriaProducto[];
 }) {
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [pageProductos, setPageProductos] = useState<Producto[]>([]);
+
+    const activos = useMemo(
+        () => productos.filter((p) => p.producto_esta_vigente),
+        [productos],
+    );
+
+    const totalProductos = activos.length;
+
+    const productosCriticos = useMemo(
+        () => activos.filter((p) => p.stock_actual < p.stock_minimo).length,
+        [activos],
+    );
+
+    const chartData = useMemo(() => {
+        return pageProductos
+            .filter((p) => p.producto_esta_vigente)
+            .map((p) => ({
+                producto: p.descripcion,
+                stock_actual: p.stock_actual,
+                stock_minimo: p.stock_minimo,
+                critico: Math.max(0, p.stock_minimo - p.stock_actual),
+            }))
+            .sort((a, b) => b.critico - a.critico);
+    }, [pageProductos]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -42,6 +85,127 @@ export default function vistaProducto({
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <h1 className="text-2xl font-bold">Gestion Productos</h1>
                 <p>Administra los productos del café</p>
+
+                {chartData.length > 0 && (
+                    <div className="flex gap-4">
+                        <div className="flex w-1/3 flex-col gap-4">
+                            <Card>
+                                <CardHeader className="pb-2">
+                                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                                        Total Productos
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-3xl font-bold">
+                                        {totalProductos}
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">
+                                        productos activos en el sistema
+                                    </p>
+                                </CardContent>
+                            </Card>
+                            <Card>
+                                <CardHeader className="pb-2">
+                                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                                        Estado Crítico
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-3xl font-bold text-destructive">
+                                        {productosCriticos}
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">
+                                        productos con stock por debajo del
+                                        mínimo
+                                    </p>
+                                </CardContent>
+                            </Card>
+                        </div>
+                        <div className="w-2/3">
+                            <Card className="h-full">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2 text-base">
+                                        Stock por Producto
+                                    </CardTitle>
+                                    <CardDescription>
+                                        Comparativa de stock actual, stock
+                                        mínimo y estado crítico (página actual)
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <ChartContainer
+                                        config={stockChartConfig}
+                                        className="h-72 w-full"
+                                    >
+                                        <BarChart data={chartData}>
+                                            <CartesianGrid
+                                                vertical={false}
+                                            />
+                                            <XAxis
+                                                dataKey="producto"
+                                                tickLine={false}
+                                                tickMargin={10}
+                                                axisLine={false}
+                                                tick={({
+                                                    x,
+                                                    y,
+                                                    payload,
+                                                }) => {
+                                                    const label = String(
+                                                        payload.value,
+                                                    );
+
+                                                    return (
+                                                        <text
+                                                            x={x}
+                                                            y={y}
+                                                            textAnchor="end"
+                                                            fontSize={10}
+                                                            transform={`rotate(-20, ${x}, ${y})`}
+                                                            fill="currentColor"
+                                                            className="fill-muted-foreground"
+                                                        >
+                                                            {label.length > 15
+                                                                ? `${label.slice(0, 15)}...`
+                                                                : label}
+                                                        </text>
+                                                    );
+                                                }}
+                                            />
+                                            <YAxis
+                                                tickLine={false}
+                                                axisLine={false}
+                                                tickMargin={8}
+                                            />
+                                            <ChartTooltip
+                                                content={
+                                                    <ChartTooltipContent indicator="dot" />
+                                                }
+                                                cursor={false}
+                                            />
+                                            <Bar
+                                                dataKey="stock_actual"
+                                                fill="var(--color-stock_actual)"
+                                                radius={[4, 4, 0, 0]}
+                                            />
+                                            <Bar
+                                                dataKey="stock_minimo"
+                                                fill="var(--color-stock_minimo)"
+                                                radius={[4, 4, 0, 0]}
+                                            />
+                                            <Bar
+                                                dataKey="critico"
+                                                fill="var(--color-critico)"
+                                                radius={[4, 4, 0, 0]}
+                                            />
+                                        </BarChart>
+                                    </ChartContainer>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </div>
+                )}
+
                 <div className="flex gap-2">
                     <div className="">
                         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -176,7 +340,11 @@ export default function vistaProducto({
                         </Dialog>
                     </div>
                 </div>
-                <DataTable columns={columns} data={productos} />
+                <DataTable
+                    columns={columns}
+                    data={productos}
+                    onPageDataChange={setPageProductos}
+                />
             </div>
         </AppLayout>
     );

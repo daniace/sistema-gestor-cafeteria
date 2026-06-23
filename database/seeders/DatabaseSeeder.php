@@ -11,10 +11,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            RolSeeder::class,
             CategoriaProductoSeeder::class,
+            ProductoSeeder::class,
             MesaSeeder::class,
             MetodoPagoSeeder::class,
-            RolSeeder::class,
         ]);
 
         UserFactory::new()->create([
@@ -25,5 +26,7 @@ class DatabaseSeeder extends Seeder
             'nro_rol' => 1,
         ]);
 
+        $this->call([
+            VentaSeeder::class]);
     }
 }

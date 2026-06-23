@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CancelPedidoRequest;
 use App\Http\Requests\StorePedidoRequest;
 use App\Http\Requests\UpdatePedidoRequest;
 use App\Models\Mesa;
@@ -104,6 +105,27 @@ class PedidoController extends Controller
         return Inertia::render('pedido/ticket', [
             'pedido' => $pedido,
         ]);
+    }
+
+    public function cancel(CancelPedidoRequest $request, Pedido $pedido): RedirectResponse
+    {
+        $productos = $pedido->productos()->get();
+
+        foreach ($productos as $producto) {
+            Producto::where('id', $producto->id)
+                ->increment('stock_actual', $producto->pivot->cantidad);
+        }
+
+        $mesa = Mesa::where('numero', $pedido->numero_mesa)->first();
+        if ($mesa) {
+            $mesa->liberar();
+            $mesa->save();
+        }
+
+        $pedido->productos()->detach();
+        $pedido->update(['estado' => 'cancelado']);
+
+        return redirect()->route('inicio')->with('pedido_cancelado', $pedido->id);
     }
 
     public function ticket(Pedido $pedido): Response

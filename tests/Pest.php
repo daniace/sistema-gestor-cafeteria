@@ -1,5 +1,8 @@
 <?php
 
+use Database\Seeders\CategoriaProductoSeeder;
+use Database\Seeders\MesaSeeder;
+use Database\Seeders\MetodoPagoSeeder;
 use Database\Seeders\RolSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -17,7 +20,12 @@ use Tests\TestCase;
 
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
-    ->beforeEach(fn () => $this->seed(RolSeeder::class))
+    ->beforeEach(fn () => $this->seed([
+        RolSeeder::class,
+        CategoriaProductoSeeder::class,
+        MesaSeeder::class,
+        MetodoPagoSeeder::class,
+    ]))
     ->in('Feature');
 
 /*

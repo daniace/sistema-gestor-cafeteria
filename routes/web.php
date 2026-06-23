@@ -34,6 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('pedidos/{pedido}/ticket', [PedidoController::class, 'ticket'])->name('pedido.ticket');
     Route::put('pedidos/{pedido}', [PedidoController::class, 'update'])->name('pedido.update');
     Route::patch('pedidos/{pedido}', [PedidoController::class, 'update']);
+    Route::delete('pedidos/{pedido}', [PedidoController::class, 'cancel'])->name('pedido.cancel');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
