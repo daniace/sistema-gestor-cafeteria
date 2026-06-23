@@ -9,6 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { broadcastMesaUpdate } from '@/hooks/use-cross-tab-sync';
 import { store } from '@/routes/venta';
 import type { MetodoPago, Pedido } from '@/types/models';
 
@@ -23,19 +24,23 @@ export default function DialogCobrar({
     metodoPagos: MetodoPago[];
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    onSuccess?: () => void;
+    onSuccess?: (ventaId: number) => void;
 }) {
     const [selectedId, setSelectedId] = useState<number | null>(null);
     const [submitting, setSubmitting] = useState(false);
 
-    if (!pedido) return null;
+    if (!pedido) {
+        return null;
+    }
 
     const selectedMetodo = metodoPagos.find((m) => m.id === selectedId);
     const descuento = selectedMetodo?.descuento ?? 0;
     const totalFinal = pedido.total - (pedido.total * descuento) / 100;
 
     function handleSubmit() {
-        if (!selectedId) return;
+        if (!selectedId) {
+            return;
+        }
 
         setSubmitting(true);
         router.post(
@@ -46,10 +51,13 @@ export default function DialogCobrar({
             },
             {
                 preserveScroll: true,
-                onSuccess: () => {
+                onSuccess: (page) => {
+                    broadcastMesaUpdate();
+                    const id = (page.props as Record<string, unknown>)
+                        .venta_id as number;
                     setSubmitting(false);
                     onOpenChange(false);
-                    onSuccess?.();
+                    onSuccess(id);
                 },
                 onError: () => {
                     setSubmitting(false);
@@ -67,8 +75,7 @@ export default function DialogCobrar({
 
                 <div className="space-y-4">
                     <p className="text-sm text-muted-foreground">
-                        Mesa{' '}
-                        {String(pedido.numero_mesa).padStart(2, '0')} —
+                        Mesa {String(pedido.numero_mesa).padStart(2, '0')} —
                         Cliente: {pedido.cliente}
                     </p>
 
@@ -112,7 +119,10 @@ export default function DialogCobrar({
                             <div className="flex justify-between text-green-600 dark:text-green-400">
                                 <span>Descuento ({descuento}%)</span>
                                 <span>
-                                    -${((pedido.total * descuento) / 100).toFixed(2)}
+                                    -$
+                                    {((pedido.total * descuento) / 100).toFixed(
+                                        2,
+                                    )}
                                 </span>
                             </div>
                         )}

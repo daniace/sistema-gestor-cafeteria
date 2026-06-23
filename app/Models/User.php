@@ -7,17 +7,18 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-#[Fillable(['nombre', 'apellido', 'email', 'password', 'dni', 'estado_cuenta_usuario', 'causa_eliminacion', 'rol'])]
+#[Fillable(['nombre', 'apellido', 'email', 'password', 'dni', 'estado_cuenta_usuario', 'causa_eliminacion', 'nro_rol'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 
 class User extends Authenticatable
 {
+    protected $appends = ['puede_eliminar', 'nombre_rol'];
 
-    protected $appends = ['puede_eliminar'];
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
@@ -35,8 +36,18 @@ class User extends Authenticatable
         ];
     }
 
+    public function rol(): BelongsTo
+    {
+        return $this->belongsTo(Rol::class, 'nro_rol');
+    }
+
+    public function getNombreRolAttribute(): string
+    {
+        return $this->rol?->nombre_rol;
+    }
+
     public function getPuedeEliminarAttribute(): bool
     {
-        return $this->estado_cuenta_usuario && $this->rol !== 'admin';
+        return $this->estado_cuenta_usuario && $this->nombre_rol !== 'admin';
     }
 }

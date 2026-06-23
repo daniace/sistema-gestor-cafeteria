@@ -10,17 +10,19 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call([
+            MesaSeeder::class,
+            MetodoPagoSeeder::class,
+            RolSeeder::class,
+        ]);
+
         UserFactory::new()->create([
             'nombre' => 'Admin',
             'apellido' => 'User',
             'email' => 'admin@example.com',
             'password' => bcrypt('password'),
-            'rol' => 'admin',
+            'nro_rol' => 1,
         ]);
 
-        $this->call([
-            MesaSeeder::class,
-            MetodoPagoSeeder::class,
-        ]);
     }
 }

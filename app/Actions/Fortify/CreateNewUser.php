@@ -4,6 +4,7 @@ namespace App\Actions\Fortify;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
+use App\Models\Rol;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
@@ -32,7 +33,7 @@ class CreateNewUser implements CreatesNewUsers
             'dni' => $input['dni'],
             'estado_cuenta_usuario' => true,
             'causa_eliminacion' => null,
-            'rol' => 'user',
+            'nro_rol' => Rol::where('nombre_rol', 'vendedor')->first()->id,
         ]);
     }
 }

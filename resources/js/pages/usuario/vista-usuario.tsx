@@ -24,6 +24,7 @@ import { usuario } from '@/routes';
 import { store } from '@/routes/usuario';
 import type { BreadcrumbItem } from '@/types';
 import type { User } from '@/types/auth';
+import type { Rol } from '@/types/rol';
 import { columns } from './columns';
 import { DataTable } from './data-tabla-usuarios';
 
@@ -34,7 +35,13 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function VistaUsuario({ usuarios }: { usuarios: User[] }) {
+export default function VistaUsuario({
+    usuarios,
+    roles,
+}: {
+    usuarios: User[];
+    roles: Rol[];
+}) {
     const [dialogOpen, setDialogOpen] = useState(false);
 
     return (
@@ -170,23 +177,25 @@ export default function VistaUsuario({ usuarios }: { usuarios: User[] }) {
                                                 </Field>
                                                 <Field>
                                                     <NativeSelect
-                                                        name="rol"
+                                                        name="nro_rol"
                                                         required
                                                         className="w-full"
                                                     >
                                                         <NativeSelectOption
                                                             disabled
                                                             selected
-                                                            value="user"
+                                                            value=""
                                                         >
                                                             Seleccionar Rol
                                                         </NativeSelectOption>
-                                                        <NativeSelectOption value="vendedor">
-                                                            Vendedor
-                                                        </NativeSelectOption>
-                                                        <NativeSelectOption value="admin">
-                                                            Admin
-                                                        </NativeSelectOption>
+                                                        {roles.map((rol) => (
+                                                            <NativeSelectOption
+                                                                key={rol.id}
+                                                                value={rol.id}
+                                                            >
+                                                                {rol.nombre_rol}
+                                                            </NativeSelectOption>
+                                                        ))}
                                                     </NativeSelect>
                                                 </Field>
                                             </FieldGroup>

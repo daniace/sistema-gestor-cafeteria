@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DestroyUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Rol;
 use App\Models\User;
 use Inertia\Inertia;
 
@@ -17,6 +18,7 @@ class UserController extends Controller
     {
         return Inertia::render('usuario/vista-usuario', [
             'usuarios' => User::all(),
+            'roles' => Rol::all(),
         ]);
     }
 

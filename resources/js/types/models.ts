@@ -18,6 +18,7 @@ export type Mesa = {
     estado: 'libre' | 'ocupada';
     created_at: string;
     updated_at: string;
+    pedido_activo?: Pedido | null;
 };
 
 export type MetodoPago = {
@@ -36,7 +37,9 @@ export type Pedido = {
     user_id: number | null;
     created_at: string;
     updated_at: string;
-    productos?: (Producto & { pivot: { cantidad: number; precio_unitario: number } })[];
+    productos?: (Producto & {
+        pivot: { cantidad: number; precio_unitario: number };
+    })[];
 };
 
 export type Venta = {

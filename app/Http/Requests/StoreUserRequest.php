@@ -30,7 +30,7 @@ class StoreUserRequest extends FormRequest
             'dni' => ['required', 'string', 'max:255', 'unique:users'],
             'estado_cuenta_usuario' => ['boolean'],
             'causa_eliminacion' => ['nullable', 'string'],
-            'rol' => ['required', 'string', 'in:vendedor,admin'],
+            'nro_rol' => ['required', 'exists:roles,id'],
         ];
     }
 }

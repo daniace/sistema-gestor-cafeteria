@@ -4,7 +4,7 @@ use App\Models\User;
 
 beforeEach(fn () => $this->actingAs(User::factory()->create()));
 
-//TEST DE DESCRIPCIÓN
+// TEST DE DESCRIPCIÓN
 test('DescripcionRequerida', function () {
     $this->post(route('producto.store'), [
         'descripcion' => '',
@@ -35,10 +35,9 @@ test('DescripcionFormatoInvalido', function () {
     ])->assertSessionHasErrors('descripcion');
 });
 
-
 test('DescripcionFormatoInvalidoCadenaConNumeros', function () {
     $this->post(route('producto.store'), [
-        'descripcion' => "Helado 0",
+        'descripcion' => 'Helado 0',
         'categoria' => 1,
         'stock_actual' => 10,
         'stock_minimo' => 5,
@@ -46,8 +45,7 @@ test('DescripcionFormatoInvalidoCadenaConNumeros', function () {
     ])->assertSessionHasErrors('descripcion');
 });
 
-
-//TESTS DE CATEGORIA
+// TESTS DE CATEGORIA
 
 test('CategoriaRequerida', function () {
     $this->post(route('producto.store'), [
@@ -79,9 +77,7 @@ test('CategoriaFormatoInvalido', function () {
     ])->assertSessionHasErrors('categoria');
 });
 
-
-
-//TESTS DE STOCK ACTUAL
+// TESTS DE STOCK ACTUAL
 test('StockActualRequerido', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'prueba',
@@ -122,9 +118,7 @@ test('StockActualFormatoCadena', function () {
     ])->assertSessionHasErrors('stock_actual');
 });
 
-
-
-//TESTS DE STOCK MINIMO
+// TESTS DE STOCK MINIMO
 test('StockMinimoRequerido', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'prueba',
@@ -165,9 +159,7 @@ test('StockMinimoFormatoCadena', function () {
     ])->assertSessionHasErrors('stock_minimo');
 });
 
-
-
-//TESTS DE PRECIOS
+// TESTS DE PRECIOS
 test('PrecioRequerido', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'prueba',

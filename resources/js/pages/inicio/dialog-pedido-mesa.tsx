@@ -1,6 +1,6 @@
 import { router } from '@inertiajs/react';
 import { CashRegister, Minus, Plus, Receipt } from '@phosphor-icons/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -9,8 +9,9 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { store } from '@/routes/pedido';
+import { broadcastMesaUpdate } from '@/hooks/use-cross-tab-sync';
 import DialogCobrar from '@/pages/inicio/dialog-cobrar';
+import { store } from '@/routes/pedido';
 import type { Mesa, MetodoPago, Producto } from '@/types/models';
 
 type ProductoSeleccionado = {
@@ -20,7 +21,8 @@ type ProductoSeleccionado = {
     cantidad: number;
 };
 
-const inputCls = 'w-full rounded-xl border border-border bg-input/30 px-3 py-2 text-sm outline-none focus:border-ring focus:ring-[3px] focus:ring-ring/50';
+const inputCls =
+    'w-full rounded-xl border border-border bg-input/30 px-3 py-2 text-sm outline-none focus:border-ring focus:ring-[3px] focus:ring-ring/50';
 
 export default function DialogPedidoMesa({
     mesa,
@@ -58,7 +60,10 @@ export default function DialogPedidoMesa({
             cantidad: seleccion[p.id],
         }));
 
-    const total = productosList.reduce((sum, p) => sum + p.cantidad * p.precio, 0);
+    const total = productosList.reduce(
+        (sum, p) => sum + p.cantidad * p.precio,
+        0,
+    );
 
     function incrementar(productoId: number) {
         setSeleccion((prev) => ({
@@ -70,10 +75,13 @@ export default function DialogPedidoMesa({
     function decrementar(productoId: number) {
         setSeleccion((prev) => {
             const actual = prev[productoId] ?? 0;
+
             if (actual <= 1) {
                 const { [productoId]: _, ...rest } = prev;
+
                 return rest;
             }
+
             return { ...prev, [productoId]: actual - 1 };
         });
     }
@@ -89,20 +97,26 @@ export default function DialogPedidoMesa({
 
     function handleClose(open: boolean) {
         if (!open) {
-            reset();
+            setCliente('');
+            setSeleccion({});
+            setSubmitting(false);
         }
+
         onOpenChange(open);
     }
 
     function handleSubmit() {
-        if (!mesa || productosList.length === 0) return;
+        if (!mesa || productosList.length === 0) {
+            return;
+        }
 
         setSubmitting(true);
         router.post(
             store().url,
             {
                 numero_mesa: mesa.numero,
-                cliente: cliente || `Mesa ${String(mesa.numero).padStart(2, '0')}`,
+                cliente:
+                    cliente || `Mesa ${String(mesa.numero).padStart(2, '0')}`,
                 productos: productosList.map((p) => ({
                     id: p.id,
                     cantidad: p.cantidad,
@@ -112,11 +126,15 @@ export default function DialogPedidoMesa({
             {
                 preserveScroll: true,
                 onSuccess: (page) => {
-                    const id = (page.props as Record<string, unknown>).pedido_id as number;
+                    broadcastMesaUpdate();
+                    const id = (page.props as Record<string, unknown>)
+                        .pedido_id as number;
                     setPedidoId(id);
                     setPedidoCreado({
                         id,
-                        cliente: cliente || `Mesa ${String(mesa.numero).padStart(2, '0')}`,
+                        cliente:
+                            cliente ||
+                            `Mesa ${String(mesa.numero).padStart(2, '0')}`,
                         numero_mesa: mesa.numero,
                         total,
                         productos: productosList,
@@ -130,11 +148,34 @@ export default function DialogPedidoMesa({
         );
     }
 
-    function handleCobroSuccess() {
+    function handleCobroSuccess(ventaId: number) {
         if (pedidoCreado) {
-            setVentaId(pedidoCreado.id);
+            setVentaId(ventaId);
         }
     }
+
+    useEffect(() => {
+        if (open && mesa) {
+            if (mesa.estado === 'ocupada' && mesa.pedido_activo) {
+                const pedido_activo = mesa.pedido_activo;
+                setPedidoId(pedido_activo.id);
+                setPedidoCreado({
+                    id: pedido_activo.id,
+                    numero_mesa: mesa.numero,
+                    cliente: pedido_activo.cliente,
+                    total: pedido_activo.total,
+                    productos: (pedido_activo.productos ?? []).map((p) => ({
+                        id: p.id,
+                        descripcion: p.descripcion,
+                        precio: p.pivot.precio_unitario,
+                        cantidad: p.pivot.cantidad,
+                    })),
+                });
+            } else {
+                reset();
+            }
+        }
+    }, [open, mesa]);
 
     return (
         <>
@@ -155,7 +196,10 @@ export default function DialogPedidoMesa({
                                 </div>
                                 <p className="text-lg font-semibold">
                                     Venta #{ventaId} — Mesa{' '}
-                                    {String(pedidoCreado.numero_mesa).padStart(2, '0')}
+                                    {String(pedidoCreado.numero_mesa).padStart(
+                                        2,
+                                        '0',
+                                    )}
                                 </p>
                                 <div className="w-full space-y-2 rounded-xl bg-muted/50 p-4">
                                     {pedidoCreado.productos.map((p) => (
@@ -170,14 +214,19 @@ export default function DialogPedidoMesa({
                                                 </span>
                                             </span>
                                             <span className="font-medium">
-                                                ${(p.cantidad * p.precio).toFixed(2)}
+                                                $
+                                                {(
+                                                    p.cantidad * p.precio
+                                                ).toFixed(2)}
                                             </span>
                                         </div>
                                     ))}
                                     <div className="border-t border-border pt-2 text-base font-bold">
                                         <div className="flex justify-between">
                                             <span>Total</span>
-                                            <span>${pedidoCreado.total.toFixed(2)}</span>
+                                            <span>
+                                                ${pedidoCreado.total.toFixed(2)}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -214,7 +263,10 @@ export default function DialogPedidoMesa({
                                 </div>
                                 <p className="text-lg font-semibold">
                                     Pedido #{pedidoId} — Mesa{' '}
-                                    {String(pedidoCreado.numero_mesa).padStart(2, '0')}
+                                    {String(pedidoCreado.numero_mesa).padStart(
+                                        2,
+                                        '0',
+                                    )}
                                 </p>
                                 <p className="text-sm text-muted-foreground">
                                     Cliente: {pedidoCreado.cliente}
@@ -232,14 +284,19 @@ export default function DialogPedidoMesa({
                                                 </span>
                                             </span>
                                             <span className="font-medium">
-                                                ${(p.cantidad * p.precio).toFixed(2)}
+                                                $
+                                                {(
+                                                    p.cantidad * p.precio
+                                                ).toFixed(2)}
                                             </span>
                                         </div>
                                     ))}
                                     <div className="border-t border-border pt-2 text-base font-bold">
                                         <div className="flex justify-between">
                                             <span>Total</span>
-                                            <span>${pedidoCreado.total.toFixed(2)}</span>
+                                            <span>
+                                                ${pedidoCreado.total.toFixed(2)}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -262,7 +319,11 @@ export default function DialogPedidoMesa({
                         <>
                             <DialogHeader className="px-6 pt-6">
                                 <DialogTitle>
-                                    Mesa {String(mesa?.numero ?? '').padStart(2, '0')}
+                                    Mesa{' '}
+                                    {String(mesa?.numero ?? '').padStart(
+                                        2,
+                                        '0',
+                                    )}
                                 </DialogTitle>
                             </DialogHeader>
 
@@ -275,13 +336,16 @@ export default function DialogPedidoMesa({
                                         className={inputCls}
                                         placeholder={`Mesa ${String(mesa?.numero ?? '').padStart(2, '0')}`}
                                         value={cliente}
-                                        onChange={(e) => setCliente(e.target.value)}
+                                        onChange={(e) =>
+                                            setCliente(e.target.value)
+                                        }
                                     />
                                 </div>
 
                                 <div className="space-y-2">
                                     {productos.map((producto) => {
-                                        const cantidad = seleccion[producto.id] ?? 0;
+                                        const cantidad =
+                                            seleccion[producto.id] ?? 0;
                                         return (
                                             <div
                                                 key={producto.id}
@@ -292,14 +356,21 @@ export default function DialogPedidoMesa({
                                                         {producto.descripcion}
                                                     </p>
                                                     <p className="text-xs text-muted-foreground">
-                                                        ${producto.precio.toFixed(2)}
+                                                        $
+                                                        {producto.precio.toFixed(
+                                                            2,
+                                                        )}
                                                     </p>
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <Button
                                                         variant="outline"
                                                         size="icon-xs"
-                                                        onClick={() => decrementar(producto.id)}
+                                                        onClick={() =>
+                                                            decrementar(
+                                                                producto.id,
+                                                            )
+                                                        }
                                                     >
                                                         <Minus className="size-3" />
                                                     </Button>
@@ -309,7 +380,11 @@ export default function DialogPedidoMesa({
                                                     <Button
                                                         variant="outline"
                                                         size="icon-xs"
-                                                        onClick={() => incrementar(producto.id)}
+                                                        onClick={() =>
+                                                            incrementar(
+                                                                producto.id,
+                                                            )
+                                                        }
                                                     >
                                                         <Plus className="size-3" />
                                                     </Button>
@@ -337,10 +412,14 @@ export default function DialogPedidoMesa({
                                     Cancelar
                                 </Button>
                                 <Button
-                                    disabled={productosList.length === 0 || submitting}
+                                    disabled={
+                                        productosList.length === 0 || submitting
+                                    }
                                     onClick={handleSubmit}
                                 >
-                                    {submitting ? 'Creando...' : 'Confirmar Pedido'}
+                                    {submitting
+                                        ? 'Creando...'
+                                        : 'Confirmar Pedido'}
                                 </Button>
                             </DialogFooter>
                         </>

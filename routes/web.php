@@ -7,7 +7,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VentaController;
 use App\Models\Mesa;
 use App\Models\MetodoPago;
+use App\Models\Pedido;
 use App\Models\Producto;
+
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -18,9 +20,10 @@ Route::inertia('/', 'auth/login', [
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('inicio', function () {
+
         return Inertia::render('inicio', [
             'productos' => Producto::all(),
-            'mesas' => Mesa::orderBy('numero')->get(),
+            'mesas' => Mesa::with('pedidoActivo.productos')->orderBy('numero')->get(),
             'metodoPagos' => MetodoPago::where('habilitado', true)->get(),
         ]);
     })->name('inicio');

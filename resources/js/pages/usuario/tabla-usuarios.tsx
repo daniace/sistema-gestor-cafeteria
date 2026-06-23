@@ -41,7 +41,7 @@ export function TableActions({ usuarios }: { usuarios: User[] }) {
                         </TableCell>
                         <TableCell>{usuario.nombre}</TableCell>
                         <TableCell>{usuario.apellido}</TableCell>
-                        <TableCell>{usuario.rol}</TableCell>
+                        <TableCell>{usuario.nombre_rol}</TableCell>
                         <TableCell>
                             {usuario.estado_cuenta_usuario
                                 ? 'Activo'

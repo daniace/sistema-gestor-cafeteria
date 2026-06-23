@@ -28,7 +28,7 @@ export default function DialogFormUsuario({ usuario }: { usuario: User }) {
         apellido: usuario.apellido,
         dni: usuario.dni,
         email: usuario.email,
-        rol: usuario.rol,
+        rol: usuario.nombre_rol,
     });
 
     return (

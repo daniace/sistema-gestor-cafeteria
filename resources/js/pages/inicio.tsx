@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import { Coffee } from 'lucide-react';
 import { useState } from 'react';
 import MesaCard from '@/components/mesa/mesa-card';
+import { useCrossTabSync } from '@/hooks/use-cross-tab-sync';
 import AppLayout from '@/layouts/app-layout';
 import DialogPedidoMesa from '@/pages/inicio/dialog-pedido-mesa';
 import { inicio } from '@/routes';
@@ -24,6 +25,7 @@ export default function Inicio({
     mesas: Mesa[];
     metodoPagos: MetodoPago[];
 }) {
+    useCrossTabSync();
     const [mesaSeleccionada, setMesaSeleccionada] = useState<Mesa | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
 

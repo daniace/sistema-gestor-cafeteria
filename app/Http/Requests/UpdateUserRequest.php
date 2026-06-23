@@ -27,7 +27,7 @@ class UpdateUserRequest extends FormRequest
             'apellido' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'dni' => ['required', 'string', 'max:255', 'unique:users'],
-            'rol' => ['required', 'string', 'in:vendedor,admin'],
+            'nro_rol' => ['required', 'exists:roles,id'],
         ];
     }
 }

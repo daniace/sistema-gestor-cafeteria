@@ -21,7 +21,7 @@ trait ProfileValidationRules
             'dni' => $this->dniRules($userId),
             'estado_cuenta_usuario' => $this->estadoCuentaUsuarioRules(),
             'causa_eliminacion' => $this->causaEliminacionRules(),
-            'rol' => $this->roleRules(),
+            'nro_rol' => $this->roleRules(),
         ];
     }
 
@@ -64,7 +64,7 @@ trait ProfileValidationRules
 
     protected function roleRules(): array
     {
-        return ['string', 'in:admin,user,vendedor'];
+        return ['required', 'exists:roles,id'];
     }
 
     /**

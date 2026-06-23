@@ -6,18 +6,19 @@ use Database\Factories\ProductoFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable('n')]
+#[Fillable('nombre_rol')]
 
-class Role extends Model
+class Rol extends Model
 {
     /** @use HasFactory<ProductoFactory> */
     use HasFactory;
 
-    public function get_name_role_by_id(mixed $id_role): string
+    protected $table = 'roles';
+
+    public function usuarios(): HasMany
     {
-        return $this->where('id', $id_role)->value('descripcion');
+        return $this->hasMany(User::class, 'nro_rol');
     }
 }
-
-?>
