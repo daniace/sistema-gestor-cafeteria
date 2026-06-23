@@ -1,13 +1,8 @@
 <?php
 
-use App\Models\CategoriaProducto;
-use App\Models\Rol;
 use App\Models\User;
 
 beforeEach(function () {
-    Rol::create(['id' => 1, 'nombre_rol' => 'admin']);
-    Rol::create(['id' => 2, 'nombre_rol' => 'vendedor']);
-    CategoriaProducto::factory()->create(['id' => 1]);
     $this->actingAs(User::factory()->create());
 });
 
@@ -119,7 +114,7 @@ test('StockActualFormatoCadena', function () {
     $this->post(route('producto.store'), [
         'descripcion' => 'Test',
         'categoria_id' => 1,
-        'stock_actual' => '10',
+        'stock_actual' => 'abc',
         'stock_minimo' => 5,
         'precio' => 99.99,
     ])->assertSessionHasErrors('stock_actual');
@@ -161,7 +156,7 @@ test('StockMinimoFormatoCadena', function () {
         'descripcion' => 'Test',
         'categoria_id' => 1,
         'stock_actual' => 10,
-        'stock_minimo' => '5',
+        'stock_minimo' => 'abc',
         'precio' => 99.99,
     ])->assertSessionHasErrors('stock_minimo');
 });

@@ -5,7 +5,8 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
+import { ChartContainer, ChartTooltip, ChartTooltipContent  } from '@/components/ui/chart';
+import type {ChartConfig} from '@/components/ui/chart';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import {
@@ -15,7 +16,7 @@ import {
 
 import { Spinner } from '@/components/ui/spinner';
 import AppLayout from '@/layouts/app-layout';
-import { inicio, producto } from '@/routes';
+import { producto } from '@/routes';
 import { store } from '@/routes/producto';
 import type { BreadcrumbItem } from '@/types';
 import type { CategoriaProducto, Producto } from '@/types/models';
@@ -45,7 +46,7 @@ const stockChartConfig = {
     },
 } satisfies ChartConfig;
 
-export default function vistaProducto({
+export default function VistaProducto({
     productos,
     categorias,
 }: {

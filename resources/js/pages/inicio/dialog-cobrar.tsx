@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react';
-import { CashRegister } from '@phosphor-icons/react';
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {

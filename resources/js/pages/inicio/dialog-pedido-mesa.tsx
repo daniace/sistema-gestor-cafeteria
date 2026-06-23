@@ -91,7 +91,9 @@ export default function DialogPedidoMesa({
             const actual = prev[productoId] ?? 0;
 
             if (actual <= 1) {
-                const { [productoId]: _, ...rest } = prev;
+                const rest = { ...prev };
+
+                delete rest[productoId];
 
                 return rest;
             }
@@ -250,7 +252,10 @@ return;
         if (open && mesa) {
             if (mesa.estado === 'ocupada' && mesa.pedido_activo) {
                 const pedido_activo = mesa.pedido_activo;
+
+                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setPedidoId(pedido_activo.id);
+                 
                 setPedidoCreado({
                     id: pedido_activo.id,
                     numero_mesa: mesa.numero,

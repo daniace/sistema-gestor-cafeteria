@@ -1,11 +1,9 @@
 <?php
 
-use Database\Seeders\RolSeeder;
 use Laravel\Fortify\Features;
 
 beforeEach(function () {
     $this->skipUnlessFortifyFeature(Features::registration());
-    $this->seed(RolSeeder::class);
 });
 
 test('registration screen can be rendered', function () {
@@ -25,5 +23,5 @@ test('new users can register', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('inicio', absolute: false));
 });

@@ -7,6 +7,26 @@ import type { CategoriaProducto, Producto } from '@/types/models';
 import DialogFormBajaProducto from './dialog-form-baja-producto';
 import DialogFormProducto from './dialog-form-producto';
 
+function CategoriaCell({ row }: { row: { original: Producto } }) {
+    const { categorias } = usePage().props as {
+        categorias: CategoriaProducto[];
+    };
+    const cat = categorias.find(
+        (c) => c.id === row.original.categoria_id,
+    );
+
+    return cat?.nombre_categoria_producto ?? row.original.categoria_id;
+}
+
+function EliminarCell({ row }: { row: { original: Producto } }) {
+    const { auth } = usePage().props as { auth: { rol: string } };
+    const producto = row.original;
+
+    if (producto.puede_eliminar && auth.rol === 'admin') {
+        return <DialogFormBajaProducto producto={producto} />;
+    }
+}
+
 export const columns: ColumnDef<Producto>[] = [
     {
         accessorKey: 'descripcion',
@@ -15,16 +35,7 @@ export const columns: ColumnDef<Producto>[] = [
     {
         accessorKey: 'categoria_id',
         header: 'Categoria',
-        cell: ({ row }) => {
-            const { categorias } = usePage().props as {
-                categorias: CategoriaProducto[];
-            };
-            const cat = categorias.find(
-                (c) => c.id === row.original.categoria_id,
-            );
-
-            return cat?.nombre_categoria_producto ?? row.original.categoria_id;
-        },
+        cell: (props) => <CategoriaCell row={props.row} />,
     },
     {
         accessorKey: 'updated_at',
@@ -69,13 +80,6 @@ export const columns: ColumnDef<Producto>[] = [
         id: 'eliminar',
         header: '',
 
-        cell: ({ row }) => {
-            const producto = row.original;
-            const { auth } = usePage().props;
-
-            if (producto.puede_eliminar && auth.rol === 'admin') {
-                return <DialogFormBajaProducto producto={producto} />;
-            }
-        },
+        cell: (props) => <EliminarCell row={props.row} />,
     },
 ];

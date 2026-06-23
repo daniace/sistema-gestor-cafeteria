@@ -26,6 +26,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'metodoPagos' => MetodoPago::where('habilitado', true)->get(),
         ]);
     })->name('inicio');
+
+    Route::permanentRedirect('dashboard', 'inicio')->name('dashboard');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
