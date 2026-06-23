@@ -6,10 +6,12 @@ use App\Http\Requests\StoreVentaRequest;
 use App\Models\MetodoPago;
 use App\Models\Pedido;
 use App\Models\Venta;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class VentaController extends Controller
 {
@@ -64,5 +66,14 @@ class VentaController extends Controller
             'venta' => $venta,
             'print' => true,
         ]);
+    }
+
+    public function downloadPdf(Venta $venta): SymfonyResponse
+    {
+        $venta->load('pedido.productos', 'metodoPago');
+
+        $pdf = Pdf::loadView('pdf.ticket', ['venta' => $venta]);
+
+        return $pdf->download("ticket-venta-{$venta->id}.pdf");
     }
 }

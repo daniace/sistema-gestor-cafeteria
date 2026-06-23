@@ -1,4 +1,4 @@
-import { PrinterIcon } from '@phosphor-icons/react';
+import { DownloadSimpleIcon, PrinterIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,7 +8,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { ticket } from '@/routes/venta';
+import { pdf as ventaPdf, ticket } from '@/routes/venta';
 import type { Venta } from '@/types/models';
 import TicketContent from './ticket-content';
 
@@ -16,7 +16,11 @@ export default function DialogTicketVenta({ venta }: { venta: Venta }) {
     const [dialogOpen, setDialogOpen] = useState(false);
 
     function handlePrint() {
-        window.open(ticket({ venta: venta.id }), '_blank');
+        window.open(ticket({ venta: venta.id }).url, '_blank');
+    }
+
+    function handleDownloadPdf() {
+        window.open(ventaPdf({ venta: venta.id }).url, '_blank');
     }
 
     return (
@@ -42,9 +46,13 @@ export default function DialogTicketVenta({ venta }: { venta: Venta }) {
                     >
                         Cerrar
                     </Button>
+                    <Button variant="outline" onClick={handleDownloadPdf}>
+                        <DownloadSimpleIcon className="mr-1 h-4 w-4" />
+                        Descargar PDF
+                    </Button>
                     <Button onClick={handlePrint}>
                         <PrinterIcon className="mr-1 h-4 w-4" />
-                        Imprimir / PDF
+                        Imprimir
                     </Button>
                 </div>
             </DialogContent>

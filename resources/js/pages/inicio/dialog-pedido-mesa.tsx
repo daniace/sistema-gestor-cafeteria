@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react';
-import { CashRegister, Minus, PencilSimpleLine, Plus, Receipt, XCircle } from '@phosphor-icons/react';
+import { CashRegister, MagnifyingGlass, Minus, PencilSimpleLine, Plus, Receipt, XCircle } from '@phosphor-icons/react';
 import { useState, useEffect } from 'react';
 import {
     AlertDialog,
@@ -64,6 +64,22 @@ export default function DialogPedidoMesa({
     const [cancelando, setCancelando] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [updateSubmitting, setUpdateSubmitting] = useState(false);
+    const [busqueda, setBusqueda] = useState('');
+
+    const productosFiltrados = productos.filter((p) => {
+        if (!busqueda) {
+return true;
+}
+
+        const q = busqueda.toLowerCase();
+        const matchNombre = p.descripcion.toLowerCase().includes(q);
+        const matchCategoria =
+            p.categoria?.nombre_categoria_producto
+                ?.toLowerCase()
+                .includes(q) ?? false;
+
+        return matchNombre || matchCategoria;
+    });
 
     const productosList: ProductoSeleccionado[] = productos
         .filter((p) => (seleccion[p.id] ?? 0) > 0)
@@ -111,6 +127,7 @@ export default function DialogPedidoMesa({
         setSubmitting(false);
         setConfirmCancelOpen(false);
         setCancelando(false);
+        setBusqueda('');
     }
 
     function handleClose(open: boolean) {
@@ -118,6 +135,7 @@ export default function DialogPedidoMesa({
             setCliente('');
             setSeleccion({});
             setSubmitting(false);
+            setBusqueda('');
         }
 
         onOpenChange(open);
@@ -372,8 +390,20 @@ return;
                                     />
                                 </div>
 
+                                <div className="relative mb-4">
+                                    <MagnifyingGlass className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                                    <input
+                                        className={inputCls + ' pl-9'}
+                                        placeholder="Buscar por nombre o categoría..."
+                                        value={busqueda}
+                                        onChange={(e) =>
+                                            setBusqueda(e.target.value)
+                                        }
+                                    />
+                                </div>
+
                                 <div className="space-y-2">
-                                    {productos.map((producto) => {
+                                    {productosFiltrados.map((producto) => {
                                         const cantidad =
                                             seleccion[producto.id] ?? 0;
 
@@ -557,8 +587,20 @@ return;
                                     />
                                 </div>
 
+                                <div className="relative mb-4">
+                                    <MagnifyingGlass className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                                    <input
+                                        className={inputCls + ' pl-9'}
+                                        placeholder="Buscar por nombre o categoría..."
+                                        value={busqueda}
+                                        onChange={(e) =>
+                                            setBusqueda(e.target.value)
+                                        }
+                                    />
+                                </div>
+
                                 <div className="space-y-2">
-                                    {productos.map((producto) => {
+                                    {productosFiltrados.map((producto) => {
                                         const cantidad =
                                             seleccion[producto.id] ?? 0;
 

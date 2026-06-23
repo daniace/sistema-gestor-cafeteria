@@ -4,7 +4,7 @@ import { DownloadSimpleIcon } from '@phosphor-icons/react';
 import type { ColumnDef } from '@tanstack/react-table';
 
 import { Button } from '@/components/ui/button';
-import { ticket } from '@/routes/venta';
+import { pdf as ventaPdf } from '@/routes/venta';
 import type { Venta } from '@/types/models';
 
 import DialogTicketVenta from './dialog-ticket-venta';
@@ -76,7 +76,7 @@ export const columns: ColumnDef<Venta>[] = [
                     variant="outline"
                     size="sm"
                     onClick={() =>
-                        window.open(ticket({ venta: ventaId }), '_blank')
+                        window.open(ventaPdf({ venta: ventaId }).url, '_blank')
                     }
                 >
                     <DownloadSimpleIcon className="mr-1 h-4 w-4" />

@@ -21,7 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('inicio', function () {
 
         return Inertia::render('inicio', [
-            'productos' => Producto::all(),
+            'productos' => Producto::with('categoria')->get(),
             'mesas' => Mesa::with('pedidoActivo.productos')->orderBy('numero')->get(),
             'metodoPagos' => MetodoPago::where('habilitado', true)->get(),
         ]);
@@ -65,6 +65,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('ventas', [VentaController::class, 'store'])->name('venta.store');
     Route::get('ventas', [VentaController::class, 'index'])->name('venta.index');
     Route::get('ventas/{venta}/ticket', [VentaController::class, 'ticket'])->name('venta.ticket');
+    Route::get('ventas/{venta}/pdf', [VentaController::class, 'downloadPdf'])->name('venta.pdf');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
