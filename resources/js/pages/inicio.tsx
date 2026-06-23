@@ -1,8 +1,8 @@
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
+import { useEchoPublic } from '@laravel/echo-react';
 import { Coffee } from 'lucide-react';
 import { useState } from 'react';
 import MesaCard from '@/components/mesa/mesa-card';
-import { useCrossTabSync } from '@/hooks/use-cross-tab-sync';
 import AppLayout from '@/layouts/app-layout';
 import DialogPedidoMesa from '@/pages/inicio/dialog-pedido-mesa';
 import { inicio } from '@/routes';
@@ -25,7 +25,14 @@ export default function Inicio({
     mesas: Mesa[];
     metodoPagos: MetodoPago[];
 }) {
-    useCrossTabSync();
+    useEchoPublic('mesas', '.mesa.actualizada', () => {
+        router.reload({ only: ['mesas'] });
+    });
+
+    useEchoPublic('stock', '.stock.actualizado', () => {
+        router.reload({ only: ['productos'] });
+    });
+
     const [mesaSeleccionada, setMesaSeleccionada] = useState<Mesa | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
 

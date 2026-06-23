@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MesaActualizada;
 use App\Http\Requests\StoreVentaRequest;
 use App\Models\MetodoPago;
 use App\Models\Pedido;
@@ -44,6 +45,7 @@ class VentaController extends Controller
         if ($mesa) {
             $mesa->liberar();
             $mesa->save();
+            MesaActualizada::dispatch($mesa);
         }
 
         return redirect()->route('inicio')->with('venta_id', $venta->id);

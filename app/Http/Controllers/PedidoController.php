@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MesaActualizada;
+use App\Events\StockActualizado;
 use App\Http\Requests\CancelPedidoRequest;
 use App\Http\Requests\StorePedidoRequest;
 use App\Http\Requests\UpdatePedidoRequest;
@@ -42,11 +44,15 @@ class PedidoController extends Controller
         if ($mesa) {
             $mesa->ocupar();
             $mesa->save();
+            MesaActualizada::dispatch($mesa);
         }
 
         foreach ($request->productos as $item) {
-            Producto::where('id', $item['id'])
-                ->decrement('stock_actual', $item['cantidad']);
+            $producto = Producto::find($item['id']);
+            if ($producto) {
+                $producto->decrement('stock_actual', $item['cantidad']);
+                StockActualizado::dispatch($producto);
+            }
         }
 
         return redirect()->route('inicio')->with('pedido_id', $pedido->id);
@@ -60,8 +66,8 @@ class PedidoController extends Controller
         // 1. Restore stock for removed products
         foreach ($currentProducts as $producto) {
             if (! in_array($producto->id, $newProductIds)) {
-                Producto::where('id', $producto->id)
-                    ->increment('stock_actual', $producto->pivot->cantidad);
+                $producto->increment('stock_actual', $producto->pivot->cantidad);
+                StockActualizado::dispatch($producto);
             }
         }
 
@@ -71,11 +77,17 @@ class PedidoController extends Controller
             $diferencia = $item['cantidad'] - $currentCantidad;
 
             if ($diferencia > 0) {
-                Producto::where('id', $item['id'])
-                    ->decrement('stock_actual', $diferencia);
+                $producto = Producto::find($item['id']);
+                if ($producto) {
+                    $producto->decrement('stock_actual', $diferencia);
+                    StockActualizado::dispatch($producto);
+                }
             } elseif ($diferencia < 0) {
-                Producto::where('id', $item['id'])
-                    ->increment('stock_actual', abs($diferencia));
+                $producto = Producto::find($item['id']);
+                if ($producto) {
+                    $producto->increment('stock_actual', abs($diferencia));
+                    StockActualizado::dispatch($producto);
+                }
             }
         }
 
@@ -112,14 +124,15 @@ class PedidoController extends Controller
         $productos = $pedido->productos()->get();
 
         foreach ($productos as $producto) {
-            Producto::where('id', $producto->id)
-                ->increment('stock_actual', $producto->pivot->cantidad);
+            $producto->increment('stock_actual', $producto->pivot->cantidad);
+            StockActualizado::dispatch($producto);
         }
 
         $mesa = Mesa::where('numero', $pedido->numero_mesa)->first();
         if ($mesa) {
             $mesa->liberar();
             $mesa->save();
+            MesaActualizada::dispatch($mesa);
         }
 
         $pedido->productos()->detach();

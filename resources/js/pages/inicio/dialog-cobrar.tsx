@@ -9,7 +9,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { broadcastMesaUpdate } from '@/hooks/use-cross-tab-sync';
 import { store } from '@/routes/venta';
 import type { MetodoPago, Pedido } from '@/types/models';
 
@@ -52,7 +51,6 @@ export default function DialogCobrar({
             {
                 preserveScroll: true,
                 onSuccess: (page) => {
-                    broadcastMesaUpdate();
                     const id = (page.props as Record<string, unknown>)
                         .venta_id as number;
                     setSubmitting(false);

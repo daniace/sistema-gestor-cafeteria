@@ -19,7 +19,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { broadcastMesaUpdate } from '@/hooks/use-cross-tab-sync';
 import DialogCobrar from '@/pages/inicio/dialog-cobrar';
 import { cancel, store, update } from '@/routes/pedido';
 import type { Mesa, MetodoPago, Producto } from '@/types/models';
@@ -162,7 +161,6 @@ return true;
             {
                 preserveScroll: true,
                 onSuccess: (page) => {
-                    broadcastMesaUpdate();
                     const id = (page.props as Record<string, unknown>)
                         .pedido_id as number;
                     setPedidoId(id);
@@ -193,7 +191,6 @@ return true;
         router.delete(cancel(pedidoId).url, {
             preserveScroll: true,
             onSuccess: () => {
-                broadcastMesaUpdate();
                 setConfirmCancelOpen(false);
                 setCancelando(false);
                 onOpenChange(false);
@@ -242,7 +239,6 @@ return;
             {
                 preserveScroll: true,
                 onSuccess: () => {
-                    broadcastMesaUpdate();
                     setPedidoCreado({
                         id: pedidoId,
                         cliente,
