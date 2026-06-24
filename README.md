@@ -266,4 +266,4 @@ El sistema se desarrolló utilizando un ciclo de vida **iterativo e incremental*
 
 ## Licencia
 
-Este proyecto fue desarrollado como parte del curso de Ingeniería de Software — UTN FRBA.
+Este proyecto fue desarrollado como parte del curso de Ingeniería de Software.
