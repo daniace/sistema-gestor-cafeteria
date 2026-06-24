@@ -23,11 +23,11 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
-            'apellido' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'dni' => ['required', 'string', 'max:255', 'unique:users'],
-            'nro_rol' => ['required', 'exists:roles,id'],
+            'nombre' => ['string', 'max:255', 'regex:/^[\pL\s]+$/u'],
+            'apellido' => ['string', 'max:255', 'regex:/^[\pL\s]+$/u'],
+            'email' => ['string', 'email', 'max:255', 'unique:users'],
+            'dni' => ['string', 'max:255', 'unique:users'],
+            'nro_rol' => ['exists:roles,id'],
         ];
     }
 }
