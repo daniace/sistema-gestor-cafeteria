@@ -12,7 +12,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Field, FieldGroup } from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
     NativeSelect,
@@ -85,6 +85,9 @@ export default function VistaUsuario({
                                             </DialogHeader>
                                             <FieldGroup>
                                                 <Field className="flex gap-2">
+                                                    <FieldLabel htmlFor="nombre">
+                                                        Nombre
+                                                    </FieldLabel>
                                                     <Input
                                                         id="nombre"
                                                         type="text"
@@ -99,6 +102,9 @@ export default function VistaUsuario({
                                                         message={errors.nombre}
                                                         className="mt-2"
                                                     />
+                                                    <FieldLabel htmlFor="apellido">
+                                                        Apellido
+                                                    </FieldLabel>
                                                     <Input
                                                         id="apellido"
                                                         type="text"
@@ -117,6 +123,9 @@ export default function VistaUsuario({
                                                     />
                                                 </Field>
                                                 <Field>
+                                                    <FieldLabel htmlFor="dni">
+                                                        DNI
+                                                    </FieldLabel>
                                                     <Input
                                                         id="dni"
                                                         type="text"
@@ -133,6 +142,9 @@ export default function VistaUsuario({
                                                     />
                                                 </Field>
                                                 <Field>
+                                                    <FieldLabel htmlFor="email">
+                                                        Email
+                                                    </FieldLabel>
                                                     <Input
                                                         id="email"
                                                         type="email"
@@ -148,6 +160,9 @@ export default function VistaUsuario({
                                                     />
                                                 </Field>
                                                 <Field>
+                                                    <FieldLabel htmlFor="password">
+                                                        Contraseña
+                                                    </FieldLabel>
                                                     <PasswordInput
                                                         id="password"
                                                         required
@@ -162,6 +177,9 @@ export default function VistaUsuario({
                                                     />
                                                 </Field>
                                                 <Field>
+                                                    <FieldLabel htmlFor="password_confirmation">
+                                                        Confirmar Contraseña
+                                                    </FieldLabel>
                                                     <PasswordInput
                                                         id="password_confirmation"
                                                         required
@@ -176,6 +194,9 @@ export default function VistaUsuario({
                                                     />
                                                 </Field>
                                                 <Field>
+                                                    <FieldLabel htmlFor="nro_rol">
+                                                        Rol
+                                                    </FieldLabel>
                                                     <NativeSelect
                                                         name="nro_rol"
                                                         required

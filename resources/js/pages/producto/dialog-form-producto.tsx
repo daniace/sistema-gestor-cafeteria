@@ -12,7 +12,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Field, FieldGroup } from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
     NativeSelect,
@@ -43,7 +43,9 @@ export default function DialogFormProducto({
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline">Editar</Button>
+                <Button variant="outline">
+                    Editar Información de Producto
+                </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-sm">
                 <Form
@@ -114,6 +116,7 @@ export default function DialogFormProducto({
                                 </Field>
 
                                 <Field>
+                                    <FieldLabel for="precio">Precio</FieldLabel>
                                     <Input
                                         id="precio"
                                         type="number"
@@ -139,6 +142,9 @@ export default function DialogFormProducto({
                                 </Field>
 
                                 <Field>
+                                    <FieldLabel for="stock_actual">
+                                        Stock Actual
+                                    </FieldLabel>
                                     <Input
                                         id="stock_actual"
                                         type="number"
@@ -164,6 +170,9 @@ export default function DialogFormProducto({
                                 </Field>
 
                                 <Field>
+                                    <FieldLabel for="stock_minimo">
+                                        Stock Minimo
+                                    </FieldLabel>
                                     <Input
                                         id="stock_minimo"
                                         type="number"

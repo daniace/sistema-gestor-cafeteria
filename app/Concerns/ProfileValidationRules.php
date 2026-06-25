@@ -31,12 +31,12 @@ trait ProfileValidationRules
      */
     protected function firstNameRules(): array
     {
-        return ['required', 'string', 'max:255'];
+        return ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'];
     }
 
     protected function lastNameRules(): array
     {
-        return ['required', 'string', 'max:255'];
+        return ['required', 'string', 'max:255','regex:/^[\pL\s]+$/u'];
     }
 
     protected function dniRules(?int $userId = null): array

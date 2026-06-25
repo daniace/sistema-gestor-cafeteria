@@ -11,7 +11,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Field, FieldGroup } from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
     NativeSelect,
@@ -58,6 +58,9 @@ export default function DialogFormUsuario({ usuario }: { usuario: User }) {
                             </DialogHeader>
                             <FieldGroup>
                                 <Field className="flex gap-2">
+                                    <FieldLabel htmlFor="nombre">
+                                        Nombre
+                                    </FieldLabel>
                                     <Input
                                         id="nombre"
                                         type="text"
@@ -79,6 +82,9 @@ export default function DialogFormUsuario({ usuario }: { usuario: User }) {
                                         message={errors.nombre}
                                         className="mt-2"
                                     />
+                                    <FieldLabel htmlFor="apellido">
+                                        Apellido
+                                    </FieldLabel>
                                     <Input
                                         id="apellido"
                                         type="text"
@@ -102,6 +108,7 @@ export default function DialogFormUsuario({ usuario }: { usuario: User }) {
                                     />
                                 </Field>
                                 <Field>
+                                    <FieldLabel htmlFor="dni">DNI</FieldLabel>
                                     <Input
                                         id="dni"
                                         type="text"
@@ -125,6 +132,9 @@ export default function DialogFormUsuario({ usuario }: { usuario: User }) {
                                     />
                                 </Field>
                                 <Field>
+                                    <FieldLabel htmlFor="email">
+                                        Email
+                                    </FieldLabel>
                                     <Input
                                         id="email"
                                         type="email"
@@ -147,6 +157,7 @@ export default function DialogFormUsuario({ usuario }: { usuario: User }) {
                                     />
                                 </Field>
                                 <Field>
+                                    <FieldLabel htmlFor="rol">Rol</FieldLabel>
                                     <NativeSelect
                                         name="rol"
                                         required

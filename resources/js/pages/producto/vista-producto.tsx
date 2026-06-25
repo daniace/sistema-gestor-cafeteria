@@ -4,10 +4,21 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartContainer, ChartTooltip, ChartTooltipContent  } from '@/components/ui/chart';
-import type {ChartConfig} from '@/components/ui/chart';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import {
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from '@/components/ui/chart';
+import type { ChartConfig } from '@/components/ui/chart';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
     NativeSelect,
@@ -139,19 +150,13 @@ export default function VistaProducto({
                                         className="h-72 w-full"
                                     >
                                         <BarChart data={chartData}>
-                                            <CartesianGrid
-                                                vertical={false}
-                                            />
+                                            <CartesianGrid vertical={false} />
                                             <XAxis
                                                 dataKey="producto"
                                                 tickLine={false}
                                                 tickMargin={10}
                                                 axisLine={false}
-                                                tick={({
-                                                    x,
-                                                    y,
-                                                    payload,
-                                                }) => {
+                                                tick={({ x, y, payload }) => {
                                                     const label = String(
                                                         payload.value,
                                                     );
@@ -234,6 +239,9 @@ export default function VistaProducto({
                                                 Nuevo Producto
                                             </h1>
                                             <div className="flex gap-2">
+                                                <FieldLabel for="descripcion">
+                                                    Descripción
+                                                </FieldLabel>
                                                 <Input
                                                     id="descripcion"
                                                     type="text"
@@ -272,6 +280,9 @@ export default function VistaProducto({
                                                 ))}
                                             </NativeSelect>
                                             <div className="flex gap-2">
+                                                <FieldLabel for="stock_actual">
+                                                    Stock Actual
+                                                </FieldLabel>
                                                 <Input
                                                     id="stock_actual"
                                                     type="number"
@@ -287,6 +298,9 @@ export default function VistaProducto({
                                                     }
                                                     className="mt-2"
                                                 />
+                                                <FieldLabel for="stock_minimo">
+                                                    Stock Minimo
+                                                </FieldLabel>
                                                 <Input
                                                     id="stock_minimo"
                                                     type="number"
@@ -302,6 +316,9 @@ export default function VistaProducto({
                                                     }
                                                     className="mt-2"
                                                 />
+                                                <FieldLabel for="precio">
+                                                    Precio
+                                                </FieldLabel>
                                                 <Input
                                                     id="precio"
                                                     type="number"
